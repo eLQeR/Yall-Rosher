@@ -16,8 +16,12 @@ Including another URLconf
 """
 
 from django.contrib import admin
-from django.urls import path
+from django.urls import path, include
 
 urlpatterns = [
     path("admin/", admin.site.urls),
+    path("api/yall-rosher/", include("shop.urls", namespace="shop") , name="shop"),
+
 ]
+
+app_name = "shop_system"
