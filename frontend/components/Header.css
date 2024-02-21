@@ -74,9 +74,11 @@ header {
     padding: 5px;
 }
 
-.half span ul li {
+.half span ul {
     position: absolute;
-    left: 0;
-    width: 100px;
-    background: white;
+    width: 80px;
+    padding: 15px;
+    border: 1px solid grey;
+    border-radius: 15px;
+    background-color: white;
 }

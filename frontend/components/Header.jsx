@@ -2,6 +2,10 @@ import './Header.css'
 import { MdAccountCircle } from 'react-icons/md'
 import { FaHeart, FaShoppingCart } from 'react-icons/fa'
 import { FaMagnifyingGlass } from 'react-icons/fa6'
+import TextWithDropdown from './TextWithDropdown'
+import NewDropdown from './dropdowns/New'
+import ForWomanDropdown from './dropdowns/ForWoman'
+import ForManDropdown from './dropdowns/ForMan'
 
 const Header = () => {
     return (
@@ -31,9 +35,18 @@ const Header = () => {
                 </div>
             </div>
             <div className="half">
-                <span className="hoverable dropdown">Новинки</span>
-                <span className="hoverable dropdown">Жінкам</span>
-                <span className="hoverable dropdown">Чоловікам</span>
+                <TextWithDropdown
+                    text="Новинки"
+                    DropdownComponent={NewDropdown}
+                />
+                <TextWithDropdown
+                    text="Для жінок"
+                    DropdownComponent={ForWomanDropdown}
+                />
+                <TextWithDropdown
+                    text="Для чоловіків"
+                    DropdownComponent={ForManDropdown}
+                />
             </div>
         </header>
     )
