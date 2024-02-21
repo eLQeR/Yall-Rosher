@@ -1,0 +1,33 @@
+.wrapper {
+    visibility: visible;
+    width: 100%;
+    max-width: 800px;
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    border: 2px solid black;
+    border-left: none;
+    background-color: inherit;
+}
+
+.column {
+    border-left: 2px solid black;
+    padding: 5px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    justify-items: center;
+    align-items: center;
+}
+
+.column p {
+    text-transform: uppercase;
+    margin-bottom: 5px;
+}
+
+.column ul {
+    padding: 5px;
+}
+
+.column ul li {
+    color: gray;
+}
