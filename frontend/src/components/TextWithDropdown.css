@@ -4,14 +4,13 @@
     width: 100%;
     background-color: lightgray;
     border: 2px solid black;
-    margin-top: 5px;
     display: flex;
     justify-content: center;
     visibility: hidden;
 }
 
 .text {
-    padding: 5px;
+    padding: 10px;
 }
 
 .text:hover {

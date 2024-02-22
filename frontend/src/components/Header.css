@@ -48,7 +48,7 @@ header {
 }
 
 .half.bottom {
-    justify-content: space-evenly;
+    justify-content: center;
     max-width: 800px;
 }
 
