@@ -9,6 +9,14 @@ class SemiCategoryViewSet(viewsets.ModelViewSet):
     queryset = SemiCategory.objects.all()
     serializer_class = SemiCategorySerializer
 
+    def get_queryset(self):
+        queryset = self.queryset
+        type = self.request.query_params.get("type")
+
+        if type:
+            queryset = queryset.filter(type=type)
+        return queryset
+
 
 class ItemViewSet(viewsets.ModelViewSet):
     queryset = Item.objects.all()
