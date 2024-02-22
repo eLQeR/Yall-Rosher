@@ -21,8 +21,8 @@ class ItemSerializer(serializers.ModelSerializer):
 
 
 class SemiCategorySerializer(serializers.ModelSerializer):
+    type = serializers.CharField(source="type.type")
+
     class Meta:
         model = SemiCategory
         fields = "__all__"
-
-
