@@ -10,19 +10,19 @@ class CategorySerializer(serializers.ModelSerializer):
 
 class CartSerializer(serializers.ModelSerializer):
     class Meta:
-        model = Category
+        model = Cart
         fields = "__all__"
 
 
 class ItemSerializer(serializers.ModelSerializer):
     class Meta:
-        model = Category
+        model = Item
         fields = "__all__"
 
 
 class SemiCategorySerializer(serializers.ModelSerializer):
     class Meta:
-        model = Category
+        model = SemiCategory
         fields = "__all__"
 
 
