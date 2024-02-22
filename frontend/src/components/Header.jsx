@@ -3,16 +3,13 @@ import { MdAccountCircle } from 'react-icons/md'
 import { FaHeart, FaShoppingCart } from 'react-icons/fa'
 import { FaMagnifyingGlass } from 'react-icons/fa6'
 import TextWithDropdown from './TextWithDropdown'
-import NewDropdown from './dropdowns/New'
-import ForWomanDropdown from './dropdowns/ForWoman'
-import ForManDropdown from './dropdowns/ForMan'
 
 const Header = () => {
     return (
         <header>
             <div className="half">
                 <div className="title hoverable">
-                    <img src="../assets/logo.png" alt="logo" />
+                    <img src="logo.png" alt="logo" />
                     <h1>YALL-ROSHER</h1>
                 </div>
                 <div className="search-bar">
@@ -34,19 +31,14 @@ const Header = () => {
                     </div>
                 </div>
             </div>
-            <div className="half">
-                <TextWithDropdown
-                    text="Новинки"
-                    DropdownComponent={NewDropdown}
-                />
-                <TextWithDropdown
-                    text="Для жінок"
-                    DropdownComponent={ForWomanDropdown}
-                />
-                <TextWithDropdown
-                    text="Для чоловіків"
-                    DropdownComponent={ForManDropdown}
-                />
+            <div className="half bottom">
+                <TextWithDropdown text="Жіноче" forWho="" />
+                <TextWithDropdown text="Чоловіче" forWho="" />
+                <TextWithDropdown text="Дитяче" forWho="" />
+                <TextWithDropdown text="Унісекс" forWho="" />
+                <TextWithDropdown text="Дівчаче" forWho="" />
+                <TextWithDropdown text="Хлопчаче" forWho="" />
+                <TextWithDropdown text="Аксесуари" forWho="" />
             </div>
         </header>
     )

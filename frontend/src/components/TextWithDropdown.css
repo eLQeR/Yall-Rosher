@@ -1,7 +1,27 @@
+.dropdown {
+    position: absolute;
+    left: 0;
+    width: 100%;
+    background-color: lightgray;
+    border: 2px solid black;
+    margin-top: 5px;
+    display: flex;
+    justify-content: center;
+    visibility: hidden;
+}
+
+.text {
+    padding: 5px;
+}
+
+.text:hover {
+    text-decoration: underline 2px solid black;
+    cursor: default;
+}
+
 .wrapper {
     visibility: visible;
     width: 100%;
-    max-width: 800px;
     display: grid;
     grid-template-columns: 1fr 1fr 1fr;
     border: 2px solid black;
@@ -11,12 +31,11 @@
 
 .column {
     border-left: 2px solid black;
-    padding: 5px;
+    padding: 10px;
     display: flex;
     flex-direction: column;
-    justify-content: center;
-    justify-items: center;
     align-items: center;
+    font-size: large;
 }
 
 .column p {
@@ -30,4 +49,9 @@
 
 .column ul li {
     color: gray;
+    padding: 1px;
+}
+
+a {
+    color: inherit;
 }

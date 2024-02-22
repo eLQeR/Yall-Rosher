@@ -1,4 +1,4 @@
-import Header from '../components/Header.jsx'
+import Header from './components/Header.jsx'
 import './App.css'
 
 function App() {
