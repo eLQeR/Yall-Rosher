@@ -21,7 +21,7 @@ class ItemSerializer(serializers.ModelSerializer):
 
 
 class SemiCategorySerializer(serializers.ModelSerializer):
-    type = serializers.CharField(source="type.type")
+    type = serializers.CharField(source="type.name")
 
     class Meta:
         model = SemiCategory
