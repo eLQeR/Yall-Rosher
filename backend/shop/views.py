@@ -19,6 +19,13 @@ class ItemViewSet(viewsets.ModelViewSet):
             return ItemListSerializer
         return ItemSerializer
 
+    def get_queryset(self):
+        queryset = self.queryset
+        semi_category = self.request.query_params.get("category")
+
+        if semi_category:
+            queryset = queryset.filter(semi_category_id=semi_category)
+        return queryset
 
 class CartViewSet(viewsets.ModelViewSet):
     queryset = Cart.objects.all()
