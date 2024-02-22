@@ -22,11 +22,22 @@
 .wrapper {
     visibility: visible;
     width: 100%;
+    max-width: 1000px;
     display: grid;
     grid-template-columns: 1fr 1fr 1fr;
     border: 2px solid black;
     border-left: none;
     background-color: inherit;
+    animation: appear 0.5s;
+}
+
+@keyframes appear {
+    0% {
+        opacity: 0;
+    }
+    100% {
+        opacity: 1;
+    }
 }
 
 .column {
