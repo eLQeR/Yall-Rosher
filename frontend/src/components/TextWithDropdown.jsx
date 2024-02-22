@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import './TextWithDropdown.css'
+import styles from './TextWithDropdown.module.css'
 import { Link } from 'react-router-dom'
 
 const TextWithDropdown = ({ text, forWho }) => {
@@ -36,17 +36,17 @@ const TextWithDropdown = ({ text, forWho }) => {
 
     return (
         <span
-            className="text"
+            className={styles.text}
             onMouseEnter={() => setShowDropdown(true)}
             onMouseLeave={() => setShowDropdown(false)}
         >
             {text}
             {showDropdown ? (
-                <div className="dropdown">
-                    <div className="wrapper">
+                <div className={styles.dropdown}>
+                    <div className={styles.wrapper}>
                         {Object.keys(data).map((category) => (
-                            <div key={category} className="column">
-                                <p className="title">{category}</p>
+                            <div key={category} className={styles.column}>
+                                <p className={styles.title}>{category}</p>
                                 <ul>
                                     {data[category].map((semiCategory) => (
                                         <li key={semiCategory.id}>

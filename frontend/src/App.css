@@ -15,3 +15,18 @@ body {
     height: 100vh;
     background: white;
 }
+
+@media (max-width: 800px) {
+    .hidden-on-small-screen {
+        display: none;
+    }
+}
+
+.hoverable {
+    cursor: pointer;
+    transition: all 0.5s;
+}
+
+.hoverable:hover {
+    transform: scale(1.2);
+}

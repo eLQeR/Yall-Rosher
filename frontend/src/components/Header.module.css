@@ -8,6 +8,7 @@
     display: grid;
     grid-template-columns: 1.5fr 2fr 1.5fr;
     box-shadow: 0 5px 10px black;
+    z-index: 1;
 }
 
 .left-block {
@@ -16,13 +17,13 @@
     justify-content: center;
 }
 
-.left-block > .search {
+.search {
     display: flex;
     flex-direction: row;
     align-items: center;
 }
 
-.left-block > .search > input {
+.search > input {
     border: none;
     margin-left: 10px;
     outline: none;
@@ -36,12 +37,13 @@
     align-items: center;
 }
 
-.central-block > .title {
-    font-size: 35px;
+.title {
+    align-self: center;
+    font-size: xxx-large;
     padding: 5px;
 }
 
-.central-block > .dropdowns {
+.dropdowns {
     width: 100%;
     display: flex;
     flex-direction: row;
@@ -50,25 +52,27 @@
     flex-wrap: wrap-reverse;
 }
 
-.right-block .buttons {
+.buttons {
     display: flex;
     flex-direction: row;
     justify-content: flex-end;
     margin: 3px;
 }
 
-.right-block .button {
+.button {
     display: flex;
     flex-direction: column;
     align-items: center;
     padding: 5px;
 }
 
-.hoverable {
-    cursor: pointer;
-    transition: all 0.5s;
+.red {
+    padding: 10px;
+
+    text-decoration: underline 1px solid red;
+    color: red;
 }
 
-.hoverable:hover {
-    transform: scale(1.2);
+.red:hover {
+    text-decoration: underline 2px solid red;
 }
