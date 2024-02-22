@@ -52,21 +52,8 @@ class TypeClothes(models.Model):
         return self.type
 
 
-class SemiCategory(models.Model):
-    name = models.CharField(max_length=30)
-    type = models.ForeignKey(to=TypeClothes, on_delete=models.CASCADE, default=1)
-
-    class Meta:
-        verbose_name = 'Підкатегорія'
-        verbose_name_plural = "Підкатегорії"
-
-    def __str__(self):
-        return self.name
-
-
 class Category(models.Model):
     name = models.CharField(max_length=30)
-    semi_category = models.ManyToManyField(to=SemiCategory, null=True, blank=True)
 
     class Meta:
         verbose_name = 'Категорія'
@@ -75,6 +62,17 @@ class Category(models.Model):
     def __str__(self):
         return f"{self.name}"
 
+
+class SemiCategory(models.Model):
+    name = models.CharField(max_length=30)
+    type = models.ForeignKey(to=Category, on_delete=models.CASCADE, default=1)
+
+    class Meta:
+        verbose_name = 'Підкатегорія'
+        verbose_name_plural = "Підкатегорії"
+
+    def __str__(self):
+        return self.name
 
 class Item(models.Model):
     name = models.CharField(max_length=70)
