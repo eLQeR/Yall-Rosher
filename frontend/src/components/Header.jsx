@@ -6,16 +6,25 @@ import TextWithDropdown from './TextWithDropdown'
 
 const Header = () => {
     return (
-        <header>
-            <div className="half">
-                <div className="title hoverable">
-                    <img src="logo.png" alt="logo" />
-                    <h1>YALL-ROSHER</h1>
-                </div>
-                <div className="search-bar">
+        <header className="container">
+            <div className="left-block">
+                <div className="search hoverable">
                     <FaMagnifyingGlass />
                     <input type="search" placeholder="Шукати" />
                 </div>
+            </div>
+            <div className="central-block">
+                <h1 className="title hoverable">YALL-ROSHER</h1>
+                <div className="dropdowns">
+                    <TextWithDropdown text="Жіноче" forWho="" />
+                    <TextWithDropdown text="Чоловіче" forWho="" />
+                    <TextWithDropdown text="Унісекс" forWho="" />
+                    <TextWithDropdown text="Дівчаче" forWho="" />
+                    <TextWithDropdown text="Хлопчаче" forWho="" />
+                    <TextWithDropdown text="Дитяче" forWho="" />
+                </div>
+            </div>
+            <div className="right-block">
                 <div className="buttons">
                     <div className="button hoverable">
                         <MdAccountCircle />
@@ -30,14 +39,6 @@ const Header = () => {
                         <span>Кошик</span>
                     </div>
                 </div>
-            </div>
-            <div className="half bottom">
-                <TextWithDropdown text="Жіноче" forWho="" />
-                <TextWithDropdown text="Чоловіче" forWho="" />
-                <TextWithDropdown text="Унісекс" forWho="" />
-                <TextWithDropdown text="Дівчаче" forWho="" />
-                <TextWithDropdown text="Хлопчаче" forWho="" />
-                <TextWithDropdown text="Дитяче" forWho="" />
             </div>
         </header>
     )

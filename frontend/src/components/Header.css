@@ -1,83 +1,74 @@
-header {
+.container {
     position: sticky;
     top: 0;
     left: 0;
     right: 0;
     padding: 5px;
     background: white;
-    display: flex;
-    flex-direction: column;
+    display: grid;
+    grid-template-columns: 1.5fr 2fr 1.5fr;
     box-shadow: 0 5px 10px black;
 }
 
+.left-block {
+    display: flex;
+    align-content: center;
+    justify-content: center;
+}
+
+.left-block > .search {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+
+.left-block > .search > input {
+    border: none;
+    margin-left: 10px;
+    outline: none;
+    padding: 5px;
+    border-bottom: 3px solid black;
+}
+
+.central-block {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.central-block > .title {
+    font-size: 35px;
+    padding: 5px;
+}
+
+.central-block > .dropdowns {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap-reverse;
+}
+
+.right-block .buttons {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-end;
+    margin: 3px;
+}
+
+.right-block .button {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 5px;
+}
+
 .hoverable {
-    transition: 0.5s;
+    cursor: pointer;
+    transition: all 0.5s;
 }
 
 .hoverable:hover {
     transform: scale(1.2);
-    cursor: pointer;
-}
-
-.title {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
-
-.title h1 {
-    font-size: 20px;
-    font-weight: 900;
-    color: black;
-}
-
-.title img {
-    width: 50px;
-    padding: 5px;
-}
-
-.half {
-    width: 100%;
-    height: auto;
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-    align-items: center;
-    margin: 10px auto;
-    flex-wrap: wrap-reverse;
-}
-
-.half.bottom {
-    justify-content: center;
-    max-width: 800px;
-}
-
-.search-bar {
-    padding: 5px;
-    margin: 5px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    border-bottom: 3px solid black;
-}
-
-.search-bar input {
-    border: none;
-    margin-left: 5px;
-}
-
-.search-bar input:focus {
-    outline: none;
-}
-
-.buttons {
-    display: flex;
-    flex-direction: row;
-}
-
-.button {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    padding: 5px;
 }

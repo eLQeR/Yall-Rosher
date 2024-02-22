@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
 import './TextWithDropdown.css'
+import { Link } from 'react-router-dom'
 
 const TextWithDropdown = ({ text, forWho }) => {
     const [showDropdown, setShowDropdown] = useState(false)
@@ -7,19 +8,19 @@ const TextWithDropdown = ({ text, forWho }) => {
 
     useEffect(() => {
         const controller = new AbortController()
-        console.log('fetch')
 
         fetch(
-            `http://127.0.0.1:8000/api/yall-rosher/category/semi/semi-categories/${forWho}`
+            `http://127.0.0.1:8000/api/yall-rosher/semi-categories/?type=${text}`
         )
             .then((res) => res.json())
             .then((data) => {
                 const mapping = {}
 
                 data.forEach((category) => {
-                    if (!mapping[category.type]) mapping[category.type] = []
+                    if (!mapping[category.category])
+                        mapping[category.category] = []
 
-                    mapping[category.type].push({
+                    mapping[category.category].push({
                         id: category.id,
                         name: category.name,
                     })
@@ -49,9 +50,11 @@ const TextWithDropdown = ({ text, forWho }) => {
                                 <ul>
                                     {data[category].map((semiCategory) => (
                                         <li key={semiCategory.id}>
-                                            <a href="/items">
+                                            <Link
+                                                to={`/items/${semiCategory.id}`}
+                                            >
                                                 {semiCategory.name}
-                                            </a>
+                                            </Link>
                                         </li>
                                     ))}
                                 </ul>
