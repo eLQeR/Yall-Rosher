@@ -34,11 +34,10 @@ const Header = () => {
             <div className="half bottom">
                 <TextWithDropdown text="Жіноче" forWho="" />
                 <TextWithDropdown text="Чоловіче" forWho="" />
-                <TextWithDropdown text="Дитяче" forWho="" />
                 <TextWithDropdown text="Унісекс" forWho="" />
                 <TextWithDropdown text="Дівчаче" forWho="" />
                 <TextWithDropdown text="Хлопчаче" forWho="" />
-                <TextWithDropdown text="Аксесуари" forWho="" />
+                <TextWithDropdown text="Дитяче" forWho="" />
             </div>
         </header>
     )
