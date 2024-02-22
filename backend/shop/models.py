@@ -21,11 +21,38 @@ class Country(models.TextChoices):
 class Type(models.TextChoices):
     MEN = "Чоловіче"
     WOMEN = "Жіноче"
-    UNISEX = "Універсальне"
+    UNISEX = "Унісекс"
     CHILD = "Дитяче"
     GIRL = "Дівчаче"
     BOY = "Хлопчаче"
+
+
+class Categories(models.TextChoices):
+    CLOTHES = "Одяг"
+    SHOES = "Взуття"
     ACCESSORIES = "Аксесуари"
+
+
+class Sizes(models.TextChoices):
+    XSS = "XSS"
+    XS = "XS"
+    S = "S"
+    M = "M"
+    L = "L"
+    XL = "XL"
+    XLL = "XLL"
+    XLLL = "XLLL"
+
+
+class Colors(models.TextChoices):
+    RED = "Червоний"
+    WHITE = "Білий"
+    GREEN = "Зелений"
+    BLACK = "Чорний"
+    GRAY = "Сірий"
+    YELLOW = "Жовтий"
+    PINK = "Фіолетовий"
+    BLUE = "Синій"
 
 
 class User(AbstractUser):
@@ -41,31 +68,10 @@ class User(AbstractUser):
         return self.username
 
 
-class TypeClothes(models.Model):
-    type = models.CharField(choices=Type.choices, max_length=30)
-
-    class Meta:
-        verbose_name = 'Тип одягу'
-        verbose_name_plural = "Типи одягу"
-
-    def __str__(self):
-        return self.type
-
-
-class Category(models.Model):
-    name = models.CharField(max_length=30)
-
-    class Meta:
-        verbose_name = 'Категорія'
-        verbose_name_plural = "Категорії"
-
-    def __str__(self):
-        return f"{self.name}"
-
-
 class SemiCategory(models.Model):
     name = models.CharField(max_length=30)
-    type = models.ForeignKey(to=Category, on_delete=models.CASCADE, default=1)
+    type = models.CharField(choices=Type.choices, max_length=30)
+    category = models.CharField(choices=Categories.choices, max_length=30)
 
     class Meta:
         verbose_name = 'Підкатегорія'
@@ -74,10 +80,27 @@ class SemiCategory(models.Model):
     def __str__(self):
         return self.name
 
+
+class Size(models.Model):
+    size = models.CharField(choices=Sizes.choices, max_length=5)
+    quantity = models.PositiveIntegerField()
+
+    def __str__(self):
+        return self.size
+
+
+class Color(models.Model):
+    color = models.CharField(choices=Colors.choices, max_length=11)
+
+    def __str__(self):
+        return self.color
+
+
 class Item(models.Model):
     name = models.CharField(max_length=70)
-    category = models.ForeignKey(to=Category, on_delete=models.CASCADE, related_name="items")
     semi_category = models.ForeignKey(to=SemiCategory, on_delete=models.CASCADE, related_name="items")
+    sizes = models.ManyToManyField(to=Size)
+    colors = models.ManyToManyField(to=Color)
     price = models.DecimalField(max_digits=10, decimal_places=2)
 
     def __str__(self):
@@ -121,4 +144,3 @@ class Cart(models.Model):
     class Meta:
         verbose_name = 'Кошик'
         verbose_name_plural = "Кошики"
-
