@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import { useParams } from 'react-router'
 import Item from '../components/Item'
 import styles from './Items.module.css'
+import { Link } from 'react-router-dom'
 
 const Items = () => {
     const { category } = useParams()
@@ -20,8 +21,6 @@ const Items = () => {
         return () => controller.abort()
     }, [category])
 
-    console.log(itemData)
-
     return (
         <div className={styles['items-page']}>
             <div className={styles.filters}>
@@ -29,7 +28,9 @@ const Items = () => {
             </div>
             <div className={styles.items}>
                 {itemData.map((item) => (
-                    <Item key={item.id} name={item.name} price={item.price} />
+                    <Link key={item.id} to={`/item/${item.id}`}>
+                        <Item name={item.name} price={item.price} />
+                    </Link>
                 ))}
             </div>
         </div>

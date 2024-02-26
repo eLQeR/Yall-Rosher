@@ -10,17 +10,16 @@ const TextWithDropdown = ({ text, forWho }) => {
         const controller = new AbortController()
 
         fetch(
-            `http://127.0.0.1:8000/api/yall-rosher/semi-categories/?type=${text}`
+            `http://127.0.0.1:8000/api/yall-rosher/semi-categories/?category=${text}`
         )
             .then((res) => res.json())
             .then((data) => {
                 const mapping = {}
 
                 data.forEach((category) => {
-                    if (!mapping[category.category])
-                        mapping[category.category] = []
+                    if (!mapping[category.type]) mapping[category.type] = []
 
-                    mapping[category.category].push({
+                    mapping[category.type].push({
                         id: category.id,
                         name: category.name,
                     })

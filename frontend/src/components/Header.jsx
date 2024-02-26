@@ -7,9 +7,7 @@ import { Link } from 'react-router-dom'
 
 const Header = () => {
     return (
-        <header
-            className={`${styles.container} ${styles['hidden-on-small-screen']}`}
-        >
+        <header className={`${styles.container} hidden-on-small-screen`}>
             <div className={styles['left-block']}>
                 <div className={`${styles.search} hoverable`}>
                     <FaMagnifyingGlass />
