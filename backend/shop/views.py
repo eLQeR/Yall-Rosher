@@ -1,8 +1,8 @@
-from django.shortcuts import render
+
 from rest_framework import viewsets
 
 from .models import Cart, Item, SemiCategory
-from .serializers import CartSerializer, SemiCategorySerializer, ItemSerializer, ItemListSerializer
+from .serializers import SemiCategorySerializer, ItemSerializer, ItemListSerializer
 
 
 class SemiCategoryViewSet(viewsets.ModelViewSet):
@@ -35,6 +35,7 @@ class ItemViewSet(viewsets.ModelViewSet):
             queryset = queryset.filter(semi_category_id=semi_category)
         return queryset
 
-class CartViewSet(viewsets.ModelViewSet):
-    queryset = Cart.objects.all()
-    serializer_class = CartSerializer
+
+# class CartViewSet(viewsets.ModelViewSet):
+#     queryset = Cart.objects.all()
+#     serializer_class = CartSerializer

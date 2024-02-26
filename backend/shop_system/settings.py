@@ -37,6 +37,7 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
     "rest_framework",
     "corsheaders",
+    "debug_toolbar",
     "shop",
 ]
 
@@ -49,6 +50,7 @@ MIDDLEWARE = [
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
     "corsheaders.middleware.CorsMiddleware",
+    "debug_toolbar.middleware.DebugToolbarMiddleware",
 ]
 
 ROOT_URLCONF = "shop_system.urls"
@@ -125,3 +127,10 @@ AUTH_USER_MODEL = "shop.User"
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:5173",
 ]
+
+INTERNAL_IPS = [
+    "127.0.0.1",
+]
+
+MEDIA_ROOT = BASE_DIR / "media"
+MEDIA_URL = "/media/"
