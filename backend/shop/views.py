@@ -11,10 +11,10 @@ class SemiCategoryViewSet(viewsets.ModelViewSet):
 
     def get_queryset(self):
         queryset = self.queryset
-        type = self.request.query_params.get("type")
+        category = self.request.query_params.get("category")
 
         if type:
-            queryset = queryset.filter(type=type)
+            queryset = queryset.filter(category=category)
         return queryset
 
 
