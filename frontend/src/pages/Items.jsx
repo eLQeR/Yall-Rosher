@@ -3,23 +3,31 @@ import { useParams } from 'react-router'
 import Item from '../components/Item'
 import styles from './Items.module.css'
 import { Link } from 'react-router-dom'
+import { useSelector } from 'react-redux'
 
 const Items = () => {
     const { category } = useParams()
     const [itemData, setItemData] = useState([])
+    const { accessToken } = useSelector((state) => state.user)
 
     useEffect(() => {
         const controller = new AbortController()
 
         fetch(
-            `http://127.0.0.1:8000/api/yall-rosher/items/?category=${category}`
+            `http://127.0.0.1:8000/api/yall-rosher/items/?category=${category}`,
+            {
+                signal: controller.signal,
+                headers: { Authorization: `Bearer ${accessToken}` },
+            }
         )
             .then((res) => res.json())
             .then((data) => setItemData(data))
-            .catch((err) => console.log(err))
+            .catch((err) => {
+                if (err.name !== 'AbortError') console.log(err)
+            })
 
         return () => controller.abort()
-    }, [category])
+    }, [category, accessToken])
 
     return (
         <div className={styles['items-page']}>

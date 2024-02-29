@@ -76,3 +76,9 @@
 .red:hover {
     text-decoration: underline 2px solid red;
 }
+
+@media (max-width: 800px) {
+    .hidden-on-small-screen {
+        display: none;
+    }
+}

@@ -7,7 +7,9 @@ import { Link } from 'react-router-dom'
 
 const Header = () => {
     return (
-        <header className={`${styles.container} hidden-on-small-screen`}>
+        <header
+            className={`${styles.container} ${styles['hidden-on-small-screen']}`}
+        >
             <div className={styles['left-block']}>
                 <div className={`${styles.search} hoverable`}>
                     <FaMagnifyingGlass />
@@ -15,7 +17,9 @@ const Header = () => {
                 </div>
             </div>
             <div className={styles['central-block']}>
-                <h1 className={`${styles.title} hoverable`}>YALL-ROSHER</h1>
+                <Link to="/">
+                    <h1 className={`${styles.title} hoverable`}>YALL-ROSHER</h1>
+                </Link>
 
                 <div className={styles.dropdowns}>
                     <TextWithDropdown text="Жіноче" forWho="" />
@@ -30,10 +34,12 @@ const Header = () => {
             </div>
             <div className={styles['right-block']}>
                 <div className={styles.buttons}>
-                    <div className={`${styles.button} hoverable`}>
-                        <MdAccountCircle />
-                        <span>Акаунт</span>
-                    </div>
+                    <Link to="/profile">
+                        <div className={`${styles.button} hoverable`}>
+                            <MdAccountCircle />
+                            <span>Акаунт</span>{' '}
+                        </div>{' '}
+                    </Link>
                     <div className={`${styles.button} hoverable`}>
                         <FaHeart />
                         <span>Обране</span>

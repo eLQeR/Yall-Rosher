@@ -1,7 +1,7 @@
 import { useParams } from 'react-router'
 import styles from './ItemDetails.module.css'
 import { useEffect, useState } from 'react'
-import Loading from '../components/Loading'
+import Loading from '../utils/Loading'
 
 const ItemDetails = () => {
     const { id } = useParams()
@@ -14,7 +14,9 @@ const ItemDetails = () => {
         const controller = new AbortController()
         setLoading(true)
 
-        fetch(`http://127.0.0.1:8000/api/yall-rosher/items/${id}/`)
+        fetch(`http://127.0.0.1:8000/api/yall-rosher/items/${id}/`, {
+            signal: controller.signal,
+        })
             .then((res) => res.json())
             .then((data) => {
                 if (!data.colors || data.colors.length === 0)
@@ -30,7 +32,9 @@ const ItemDetails = () => {
                 setItemData(data)
                 setLoading(false)
             })
-            .catch((err) => console.log(err))
+            .catch((err) => {
+                if (err.name !== 'AbortError') console.log(err)
+            })
 
         return () => controller.abort()
     }, [id])

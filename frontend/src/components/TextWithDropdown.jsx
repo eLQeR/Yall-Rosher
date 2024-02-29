@@ -1,37 +1,54 @@
 import { useEffect, useState } from 'react'
 import styles from './TextWithDropdown.module.css'
 import { Link } from 'react-router-dom'
+import { useSelector } from 'react-redux'
+import useAxiosPrivate from '../hooks/useAxiosPrivate'
 
 const TextWithDropdown = ({ text, forWho }) => {
     const [showDropdown, setShowDropdown] = useState(false)
     const [data, setData] = useState({})
+    const { accessToken } = useSelector((state) => state.user)
+    const axiosPrivate = useAxiosPrivate()
 
     useEffect(() => {
+        let isMounted = true
         const controller = new AbortController()
 
-        fetch(
-            `http://127.0.0.1:8000/api/yall-rosher/semi-categories/?category=${text}`
-        )
-            .then((res) => res.json())
-            .then((data) => {
-                const mapping = {}
+        const getCategories = async () => {
+            try {
+                const res = await axiosPrivate.get(
+                    `/semi-categories/?category=${text}`,
+                    {
+                        signal: controller.signal,
+                    }
+                )
 
-                data.forEach((category) => {
-                    if (!mapping[category.type]) mapping[category.type] = []
+                if (isMounted) {
+                    const mapping = {}
 
-                    mapping[category.type].push({
-                        id: category.id,
-                        name: category.name,
+                    res.data.forEach((category) => {
+                        if (!mapping[category.type]) mapping[category.type] = []
+
+                        mapping[category.type].push({
+                            id: category.id,
+                            name: category.name,
+                        })
                     })
-                })
-                setData(mapping)
-            })
-            .catch((err) => console.log(err))
+                    setData(mapping)
+                }
+            } catch (error) {
+                if (error.code === 'ERR_CANCELED') return
+                console.log(error)
+            }
+        }
+
+        getCategories()
 
         return () => {
+            isMounted = false
             controller.abort()
         }
-    }, [])
+    }, [accessToken, text, axiosPrivate])
 
     return (
         <span
