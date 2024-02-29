@@ -129,7 +129,7 @@ class Order(models.Model):
     city = models.CharField(max_length=100)
     created = models.DateTimeField(auto_now_add=True)
     paid = models.BooleanField(default=False)
-    items = models.ManyToManyField(to=Item)
+    items = models.ManyToManyField(to=VariantOfItem)
 
     class Meta:
         ordering = ('-created',)
@@ -145,8 +145,8 @@ class Order(models.Model):
 
 
 class Cart(models.Model):
-    user = models.ForeignKey(to=User, on_delete=models.CASCADE, related_name="cart")
-    items = models.ManyToManyField(to=Item)
+    user = models.OneToOneField(to=User, on_delete=models.CASCADE, related_name="cart")
+    items = models.ManyToManyField(to=VariantOfItem)
 
     @property
     def get_total_cost(self):

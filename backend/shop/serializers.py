@@ -60,7 +60,9 @@ class UserSerializer(serializers.ModelSerializer):
         }
 
     def create(self, validated_data):
-        return get_user_model().objects.create_user(**validated_data)
+        user = get_user_model().objects.create_user(**validated_data)
+        Cart.objects.create(user=user)
+        return user
 
     def update(self, instance, validated_data):
         password = validated_data.pop("password", None)
@@ -70,3 +72,21 @@ class UserSerializer(serializers.ModelSerializer):
             user.set_password(password)
             user.save()
         return user
+
+
+class VariantOfItemDetailSerializer(serializers.ModelSerializer):
+    item = ItemSerializer(many=False, read_only=False)
+
+    class Meta:
+        model = VariantOfItem
+        fields = "__all__"
+
+
+class CartSerializer(serializers.ModelSerializer):
+    items = VariantOfItemDetailSerializer(many=True, read_only=False)
+
+    class Meta:
+        model = Cart
+        fields = ("id", "items",)
+
+

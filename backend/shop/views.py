@@ -1,22 +1,23 @@
-
+from django.contrib.auth import get_user_model
 from rest_framework import viewsets, generics
 from rest_framework.permissions import IsAuthenticated
 from rest_framework_simplejwt.authentication import JWTAuthentication
 
-from .models import Cart, Item, SemiCategory
-from .serializers import SemiCategorySerializer, ItemSerializer, ItemListSerializer, UserSerializer
+from .models import Cart, Item, SemiCategory, User
+from .serializers import SemiCategorySerializer, ItemSerializer, ItemListSerializer, UserSerializer, CartSerializer
 
 
 class SemiCategoryViewSet(viewsets.ModelViewSet):
     queryset = SemiCategory.objects.all()
     serializer_class = SemiCategorySerializer
-    permission_classes = (JWTAuthentication, )
+    authentication_classes = (JWTAuthentication,)
+    permission_classes = (IsAuthenticated,)
 
     def get_queryset(self):
         queryset = self.queryset
         category = self.request.query_params.get("category")
 
-        if type:
+        if category:
             queryset = queryset.filter(category=category)
         return queryset
 
@@ -39,19 +40,23 @@ class ItemViewSet(viewsets.ModelViewSet):
         return queryset
 
 
-# class CartViewSet(viewsets.ModelViewSet):
-#     queryset = Cart.objects.all()
-#     serializer_class = CartSerializer
+class CartViewSet(generics.RetrieveUpdateAPIView):
+    serializer_class = CartSerializer
+    permission_classes = (IsAuthenticated, )
+    authentication_classes = (JWTAuthentication, )
+
+    def get_object(self):
+        return Cart.objects.get(user=self.request.user)
+
 
 class CreateUserView(generics.CreateAPIView):
     serializer_class = UserSerializer
 
 
-
 class ManageUserView(generics.RetrieveUpdateAPIView):
     serializer_class = UserSerializer
-    authentication_classes = (JWTAuthentication, )
-    permission_classes = (IsAuthenticated, )
+    authentication_classes = (JWTAuthentication,)
+    permission_classes = (IsAuthenticated,)
 
     def get_object(self):
         return self.request.user
