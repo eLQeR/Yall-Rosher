@@ -10,8 +10,6 @@ from .serializers import SemiCategorySerializer, ItemSerializer, ItemListSeriali
 class SemiCategoryViewSet(viewsets.ModelViewSet):
     queryset = SemiCategory.objects.all()
     serializer_class = SemiCategorySerializer
-    authentication_classes = (JWTAuthentication,)
-    permission_classes = (IsAuthenticated,)
 
     def get_queryset(self):
         queryset = self.queryset
