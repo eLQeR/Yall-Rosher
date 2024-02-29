@@ -6,21 +6,6 @@ from django.db import models
 from django.utils.text import slugify
 
 
-class Sex(models.TextChoices):
-    Male = "Чоловік"
-    Female = "Жінка"
-    Uknown = "Невідомо"
-    Other = "Інша"
-
-
-class Country(models.TextChoices):
-    UA = "Україна"
-    USA = "США"
-    DE = "Німеччина"
-    JP = "Японія"
-    FR = "Франція"
-    GB = "Велика Британія"
-
 
 class Type(models.TextChoices):
     MEN = "Чоловіче"
@@ -38,18 +23,34 @@ class Categories(models.TextChoices):
 
 
 class Sizes(models.TextChoices):
-    XSS = "XSS"
+    XSS = "XXS"
     XS = "XS"
     S = "S"
     M = "M"
     L = "L"
     XL = "XL"
-    XLL = "XLL"
-    XLLL = "XLLL"
+    XXL = "XXL"
+    XXXL = "XXXL"
+
+
+class Country(models.TextChoices):
+    UA = "Україна"
+    USA = "США"
+    DE = "Німеччина"
+    JP = "Японія"
+    FR = "Франція"
+    GB = "Велика Британія"
+
+
+class Sex(models.TextChoices):
+    Male = "Чоловік"
+    Female = "Жінка"
+    Unknown = "Невідомо"
+    Other = "Інша"
 
 
 class User(AbstractUser):
-    sex = models.CharField(choices=Sex.choices, default=Sex.Uknown, max_length=20)
+    sex = models.CharField(choices=Sex.choices, default=Sex.Unknown, max_length=20)
     country = models.CharField(choices=Country.choices, default=Country.UA, max_length=20)
     phone = models.CharField(max_length=13)
 
