@@ -1,10 +1,10 @@
 import os
 import uuid
 
+from django.contrib.auth import get_user_model
 from django.contrib.auth.models import AbstractUser
 from django.db import models
 from django.utils.text import slugify
-
 
 
 class Type(models.TextChoices):
@@ -32,34 +32,6 @@ class Sizes(models.TextChoices):
     XXL = "XXL"
     XXXL = "XXXL"
 
-
-class Country(models.TextChoices):
-    UA = "Україна"
-    USA = "США"
-    DE = "Німеччина"
-    JP = "Японія"
-    FR = "Франція"
-    GB = "Велика Британія"
-
-
-class Sex(models.TextChoices):
-    Male = "Чоловік"
-    Female = "Жінка"
-    Unknown = "Невідомо"
-    Other = "Інша"
-
-
-class User(AbstractUser):
-    sex = models.CharField(choices=Sex.choices, default=Sex.Unknown, max_length=20)
-    country = models.CharField(choices=Country.choices, default=Country.UA, max_length=20)
-    phone = models.CharField(max_length=13)
-
-    class Meta:
-        verbose_name = 'Користувач'
-        verbose_name_plural = "Користувачі"
-
-    def __str__(self):
-        return self.username
 
 
 class SemiCategory(models.Model):
@@ -123,13 +95,14 @@ class VariantOfItem(models.Model):
 
 
 class Order(models.Model):
-    user = models.ForeignKey(to=User, on_delete=models.DO_NOTHING)
+    user = models.ForeignKey(to=get_user_model(), on_delete=models.DO_NOTHING, related_name="orders")
     address = models.CharField(max_length=250)
     postal_code = models.CharField(max_length=20)
     city = models.CharField(max_length=100)
     created = models.DateTimeField(auto_now_add=True)
     paid = models.BooleanField(default=False)
-    items = models.ManyToManyField(to=VariantOfItem)
+    items = models.ManyToManyField(to=VariantOfItem, through="OrderItem")
+    is_canceled = models.BooleanField(default=False)
 
     class Meta:
         ordering = ('-created',)
@@ -141,20 +114,14 @@ class Order(models.Model):
 
     @property
     def get_total_cost(self):
-        return sum(item.price for item in self.items.all())
+        return round(sum(item.price for item in self.items.all()), 2)
 
-
-class Cart(models.Model):
-    user = models.OneToOneField(to=User, on_delete=models.CASCADE, related_name="cart")
-    items = models.ManyToManyField(to=VariantOfItem)
-
-    @property
-    def get_total_cost(self):
-        return sum(item.price for item in self.items.all())
-
-    class Meta:
-        verbose_name = 'Кошик'
-        verbose_name_plural = "Кошики"
+    @staticmethod
+    def validate_order(items: [VariantOfItem], error_to_raise):
+        for item in items:
+            # print(VariantOfItem.objects.get(pk=item_id))
+            if item.quantity <= 0:
+                raise error_to_raise("There are no such items avaliable.")
 
 
 def create_custom_path(instance, filename):
@@ -165,6 +132,19 @@ def create_custom_path(instance, filename):
     )
 
 
+class OrderItem(models.Model):
+    order = models.ForeignKey(Order, on_delete=models.CASCADE)
+    variant_of_item = models.ForeignKey(VariantOfItem, on_delete=models.CASCADE)
+    quantity = models.PositiveIntegerField()
+
+
 class Gallery(models.Model):
     image = models.ImageField(upload_to=create_custom_path)
     item = models.ForeignKey(Item, on_delete=models.CASCADE, related_name='images')
+    variant_of_item = models.ForeignKey(
+        VariantOfItem,
+        on_delete=models.CASCADE,
+        related_name='images',
+        null=True,
+        blank=True
+    )

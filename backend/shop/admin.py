@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Item, SemiCategory, Order, Cart, Color, Gallery, VariantOfItem
+from .models import Item, SemiCategory, Order, Color, Gallery, VariantOfItem
 
 
 class GalleryInline(admin.TabularInline):
@@ -23,4 +23,3 @@ class ProductAdmin(admin.ModelAdmin):
 admin.site.register(Color)
 admin.site.register(SemiCategory)
 admin.site.register(Order)
-admin.site.register(Cart)
