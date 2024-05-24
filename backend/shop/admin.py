@@ -17,7 +17,7 @@ class VariantOfItemInline(admin.TabularInline):
 @admin.register(Item)
 class ProductAdmin(admin.ModelAdmin):
     exclude = ["article"]
-    inlines = [GalleryInline, VariantOfItemInline]
+    inlines = [VariantOfItemInline, GalleryInline]
 
 
 admin.site.register(Color)

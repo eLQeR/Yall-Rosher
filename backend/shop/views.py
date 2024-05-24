@@ -7,20 +7,25 @@ from rest_framework.permissions import IsAuthenticated, IsAdminUser
 from rest_framework.response import Response
 from rest_framework_simplejwt.authentication import JWTAuthentication
 
-from shop.models import Item, SemiCategory, Order, VariantOfItem
+from shop.models import Item, SemiCategory, Order, VariantOfItem, OrderItem
+from shop.permissions import IsAdminOrReadOnly
 from shop.serializers import (
     SemiCategorySerializer,
     ItemSerializer,
     ItemListSerializer,
     OrderSerializer,
     VariantOfItemDetailSerializer,
-    VariantOfItemSerializer, ItemDetailSerializer, OrderDetailSerializer, VariantOfItemListSerializer,
+    VariantOfItemSerializer,
+    ItemDetailSerializer,
+    VariantOfItemListSerializer,
 )
 
 
 class SemiCategoryViewSet(viewsets.ModelViewSet):
     queryset = SemiCategory.objects.all()
     serializer_class = SemiCategorySerializer
+    permission_classes = [IsAdminOrReadOnly]
+
 
     def get_queryset(self):
         queryset = self.queryset
@@ -34,6 +39,7 @@ class SemiCategoryViewSet(viewsets.ModelViewSet):
 class ItemViewSet(viewsets.ModelViewSet):
     queryset = Item.objects.all()
     serializer_class = ItemSerializer
+    permission_classes = [IsAdminOrReadOnly]
 
     def get_serializer_class(self):
         if self.action == "list":
@@ -54,6 +60,7 @@ class ItemViewSet(viewsets.ModelViewSet):
 class VariantOfItemViewSet(viewsets.ModelViewSet):
     queryset = VariantOfItem.objects.all()
     serializer_class = VariantOfItemSerializer
+    permission_classes = [IsAdminOrReadOnly]
 
     def get_serializer_class(self):
         if self.action == "list":
@@ -145,7 +152,14 @@ class OrderViewSet(
 
     def get_serializer_class(self):
         if self.action == 'list':
-            return OrderDetailSerializer
+            return OrderSerializer
+        # if self.action == 'create':
+        #     return OrderCreateSerializer
+        print("lsssss")
+        print("lsssss")
+        print("lsssss")
+        print("lsssss")
+        print("lsssss")
         return OrderSerializer
 
     def perform_create(self, serializer):

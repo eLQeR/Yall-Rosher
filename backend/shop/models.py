@@ -31,6 +31,16 @@ class Sizes(models.TextChoices):
     XL = "XL"
     XXL = "XXL"
     XXXL = "XXXL"
+    S36 = 36
+    S37 = 37
+    S38 = 38
+    S39 = 39
+    S40 = 40
+    S41 = 41
+    S42 = 42
+    S43 = 43
+    S44 = 44
+    S45 = 45
 
 
 
@@ -42,9 +52,10 @@ class SemiCategory(models.Model):
     class Meta:
         verbose_name = 'Підкатегорія'
         verbose_name_plural = "Підкатегорії"
+        ordering = ["type", "category", "name"]
 
     def __str__(self):
-        return f"{self.name} - {self.category}"
+        return f"{self.type} - {self.category} - {self.name} "
 
 
 class Color(models.Model):
@@ -101,7 +112,7 @@ class Order(models.Model):
     city = models.CharField(max_length=100)
     created = models.DateTimeField(auto_now_add=True)
     paid = models.BooleanField(default=False)
-    items = models.ManyToManyField(to=VariantOfItem, through="OrderItem")
+    items = models.ManyToManyField(to=VariantOfItem, through="OrderItem", related_name="orders")
     is_canceled = models.BooleanField(default=False)
 
     class Meta:
