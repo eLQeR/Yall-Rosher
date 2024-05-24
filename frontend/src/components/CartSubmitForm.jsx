@@ -6,7 +6,7 @@ import Modal from '../utils/Modal';
 
 export default function CartSubmitForm() {
   const [formData, setFormData] = useState({});
-  const { cartItems, cartPrice } = useSelector((state) => state.itemSlice);
+  const { cartItems } = useSelector((state) => state.itemSlice);
   const [makeOrder] = useMakeOrderMutation();
   const [modalOpened, setModalOpened] = useState(false);
   const dispatch = useDispatch();
