@@ -1,48 +1,31 @@
-import { useEffect, useState } from 'react'
-import { useParams } from 'react-router'
-import Item from '../components/Item'
-import styles from './Items.module.css'
-import { Link } from 'react-router-dom'
-import { useSelector } from 'react-redux'
+import { useParams } from 'react-router';
+import Item from '../components/Item';
+import styles from './Items.module.css';
+import { Link } from 'react-router-dom';
+import { useGetAllItemsQuery } from '../state/item/api';
+import Loading from '../utils/Loading';
 
 const Items = () => {
-    const { category } = useParams()
-    const [itemData, setItemData] = useState([])
-    const { accessToken } = useSelector((state) => state.user)
+  const { category } = useParams();
+  const { data: items, isLoading } = useGetAllItemsQuery(category);
 
-    useEffect(() => {
-        const controller = new AbortController()
+  if (isLoading) return <Loading />;
 
-        fetch(
-            `http://127.0.0.1:8000/api/yall-rosher/items/?category=${category}`,
-            {
-                signal: controller.signal,
-                headers: { Authorization: `Bearer ${accessToken}` },
-            }
-        )
-            .then((res) => res.json())
-            .then((data) => setItemData(data))
-            .catch((err) => {
-                if (err.name !== 'AbortError') console.log(err)
-            })
+  return (
+    <div className={styles['items-page']}>
+      <div className={styles.items}>
+        {items.map((item) => (
+          <Link key={item.id} to={`/item/${item.id}`}>
+            <Item
+              name={item.name}
+              price={+item.price}
+              img={item.images[0].image}
+            />
+          </Link>
+        ))}
+      </div>
+    </div>
+  );
+};
 
-        return () => controller.abort()
-    }, [category, accessToken])
-
-    return (
-        <div className={styles['items-page']}>
-            <div className={styles.filters}>
-                <p>Aboba</p>
-            </div>
-            <div className={styles.items}>
-                {itemData.map((item) => (
-                    <Link key={item.id} to={`/item/${item.id}`}>
-                        <Item name={item.name} price={item.price} />
-                    </Link>
-                ))}
-            </div>
-        </div>
-    )
-}
-
-export default Items
+export default Items;

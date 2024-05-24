@@ -1,15 +1,17 @@
-import useRefreshToken from '../hooks/useRefreshToken'
+import { useSelector } from 'react-redux';
 
 const Home = () => {
-    const refresh = useRefreshToken()
+  const { user } = useSelector((state) => state.userSlice);
 
-    return (
-        <div>
-            <button onClick={() => console.log(refresh())}>
-                Refresh token
-            </button>
-        </div>
-    )
-}
+  return (
+    <div className="centered-container">
+      <input
+        readOnly
+        value={`Welcome to Yall Rosher${user && ', ' + user.username}!`}
+        className="stylish-text-field"
+      />
+    </div>
+  );
+};
 
-export default Home
+export default Home;
