@@ -1,6 +1,7 @@
 from django.contrib.auth import get_user_model
 from django.core.exceptions import ValidationError
 from django.db import transaction
+from django.shortcuts import get_object_or_404
 from rest_framework import serializers
 from shop.models import *
 
@@ -73,18 +74,30 @@ class SemiCategorySerializer(serializers.ModelSerializer):
         fields = ("id", "name", "type", "category")
 
 
-class ItemOrderSerializer(serializers.ModelSerializer):
-    quantity = serializers.IntegerField(read_only=True, min_value=1, max_value=100)
+class OrderItemSerializer(serializers.ModelSerializer):
+    # item = serializers.PrimaryKeyRelatedField(queryset=VariantOfItem.objects.all(), source="variant_of_item.id")
 
     class Meta:
-        model = VariantOfItem
-        fields = ("id", "quantity")
+        model = OrderItem
+        fields = ("id", "variant_of_item", "quantity")
 
+        def validate(self, attrs):
+            data = super(OrderItemSerializer, self).validate(attrs=attrs)
+            item = data["variant_of_item"]
+            quantity = data["quantity"]
+            if not (0 < quantity <= item.quantity):
+                raise ValidationError("Quantity must be between 1 and " + str(item.quantity))
 
+            return data
 
 
 class OrderSerializer(serializers.ModelSerializer):
-    items = ItemOrderSerializer(many=True, read_only=True)
+    items = OrderItemSerializer(
+        many=True,
+        read_only=False,
+        allow_null=False,
+        allow_empty=False
+    )
 
     class Meta:
         model = Order
@@ -97,25 +110,28 @@ class OrderSerializer(serializers.ModelSerializer):
             "items"
         )
 
-    def validate(self, attrs):
-        data = super(OrderSerializer, self).validate(attrs=attrs)
-        print(data)
-        # Order.validate_order(
-        #     data["items"], ValidationError
-        # )
-        return data
+    # def validate(self, attrs):
+    #     data = super(OrderSerializer, self).validate(attrs=attrs)
+    #     # Order.validate_order(
+    #     #     data["items"], ValidationError
+    #     # )
+    #     return data
 
-    # def create(self, validated_data):
-    #     with transaction.atomic():
-    #         items = validated_data.pop("items")
-    #         order = Order.objects.create(**validated_data)
-    #         order.items.add(items)
-    #         order.save()
-    #         return order
+    def create(self, validated_data):
+        # items_data = validated_data.pop('items')
+        print("val")
+        print(validated_data)
+        order = Order.objects.create(**validated_data)
+        # for item_data in items_data:
+        #     item = item_data["variant_of_item"]
+        #     item.quantity -= quantity
+        #     item.save()
+        #     OrderItem.objects.create(order=order, **item_data)
+        return order
 
 
-class OrderDetailSerializer(OrderSerializer):
-    items = VariantOfItemSerializer(many=True, read_only=False)
+# class OrderDetailSerializer(OrderSerializer):
+#     items = VariantOfItemSerializer(many=True, read_only=False)
 
 
 class VariantOfItemListSerializer(serializers.ModelSerializer):
