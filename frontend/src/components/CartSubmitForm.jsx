@@ -6,7 +6,7 @@ import Modal from '../utils/Modal';
 
 export default function CartSubmitForm() {
   const [formData, setFormData] = useState({});
-  const { cartItems } = useSelector((state) => state.itemSlice);
+  const { cartItemIds, cartItems } = useSelector((state) => state.itemSlice);
   const [makeOrder] = useMakeOrderMutation();
   const [modalOpened, setModalOpened] = useState(false);
   const dispatch = useDispatch();
@@ -22,8 +22,8 @@ export default function CartSubmitForm() {
   const onProceed = async () => {
     const obj = {
       ...formData,
-      items: cartItems.map((item) => ({
-        variant_of_item: item.item.id,
+      items: cartItemIds.map((id) => ({
+        variant_of_item: id,
         quantity: 1,
       })),
     };

@@ -15,12 +15,6 @@
   border-radius: 50%;
 }
 
-.color-box {
-  padding: 3px;
-  border: 1px solid black;
-  border-radius: 50%;
-}
-
 .images {
   display: flex;
   flex-direction: row;
@@ -70,13 +64,4 @@
   margin-top: 5px;
   display: flex;
   gap: 8px;
-}
-
-.size {
-  border: 1px solid black;
-  width: 55px;
-  height: 35px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
 }

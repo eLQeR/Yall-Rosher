@@ -4,13 +4,21 @@ import { userApi, userReducer } from './user';
 import storage from 'redux-persist/lib/storage';
 import { itemApi, itemReducer } from './item';
 
-const persistConfig = {
-  key: 'root',
-  storage,
-};
+const persistedItemReducer = persistReducer(
+  {
+    key: 'item',
+    storage,
+  },
+  itemReducer,
+);
 
-const persistedItemReducer = persistReducer(persistConfig, itemReducer);
-const persistedUserReducer = persistReducer(persistConfig, userReducer);
+const persistedUserReducer = persistReducer(
+  {
+    key: 'user',
+    storage,
+  },
+  userReducer,
+);
 
 const store = configureStore({
   reducer: {

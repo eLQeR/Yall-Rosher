@@ -13,8 +13,9 @@ import { BsFillCartPlusFill, BsFillCartDashFill } from 'react-icons/bs';
 const ItemDetails = () => {
   const { id } = useParams();
   const { data: itemData, isLoading } = useGetItemDetailsQuery(id);
-  const [colorId, setColorId] = useState(0);
-  const [sizeId, setSizeId] = useState(0);
+  const [colorId, setColorId] = useState(null);
+  const [sizeId, setSizeId] = useState(null);
+  const [variantId, setVariantId] = useState(null);
   const { cartItemIds } = useSelector((state) => state.itemSlice);
   const dispatch = useDispatch();
 
@@ -34,30 +35,39 @@ const ItemDetails = () => {
           <SelectColor
             colors={itemData.colors}
             selectedId={colorId}
-            onChange={(e) => setColorId(+e.target.id)}
+            onChange={(e) => {
+              setColorId(+e.target.id);
+              setSizeId(null);
+              setVariantId(null);
+            }}
           />
-          <SelectSize
-            sizes={itemData.sizes.filter(
-              (size) => size.color.color === itemData.colors[colorId].color,
-            )}
-            selectedId={sizeId}
-            onChange={(e) => setSizeId(+e.target.id)}
-          />
-          <div className={styles.buttons}>
-            {cartItemIds.includes(itemData.sizes[sizeId].id) ? (
-              <BsFillCartDashFill
-                onClick={() =>
-                  dispatch(removeFromCart(itemData.sizes[sizeId].id))
-                }
-                size={'40px'}
-              />
-            ) : (
-              <BsFillCartPlusFill
-                onClick={() => dispatch(addToCart({ itemData, sizeId }))}
-                size={'40px'}
-              />
-            )}
-          </div>
+          {colorId !== null && (
+            <SelectSize
+              sizes={itemData.sizes.filter(
+                (size) => size.color.color === itemData.colors[colorId].color,
+              )}
+              selectedId={sizeId}
+              onChange={(index, variantId) => {
+                setSizeId(index);
+                setVariantId(variantId);
+              }}
+            />
+          )}
+          {variantId !== null && (
+            <div className={styles.buttons}>
+              {cartItemIds.indexOf(variantId) !== -1 ? (
+                <BsFillCartDashFill
+                  onClick={() => dispatch(removeFromCart(variantId))}
+                  size={'40px'}
+                />
+              ) : (
+                <BsFillCartPlusFill
+                  onClick={() => dispatch(addToCart({ itemData, variantId }))}
+                  size={'40px'}
+                />
+              )}
+            </div>
+          )}
         </div>
       </div>
     </div>

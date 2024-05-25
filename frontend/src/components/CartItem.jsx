@@ -7,7 +7,14 @@ import { removeFromCart } from '../state/item';
 import { useDispatch } from 'react-redux';
 import { Link } from 'react-router-dom';
 
-export default function CartItem({ img, price, color, size, id, itemId }) {
+export default function CartItem({
+  variantId,
+  itemId,
+  img,
+  price,
+  color,
+  size,
+}) {
   const dispatch = useDispatch();
 
   return (
@@ -23,7 +30,7 @@ export default function CartItem({ img, price, color, size, id, itemId }) {
         </p>
         <IconWithLink
           Icon={BsFillCartDashFill}
-          action={() => dispatch(removeFromCart(id))}
+          action={() => dispatch(removeFromCart(variantId))}
         />
       </div>
     </div>
@@ -34,8 +41,8 @@ CartItem.propTypes = {
   img: string,
   name: string,
   price: number,
-  color: string || null,
-  size: string || null,
-  id: number,
+  color: string,
+  size: string,
   itemId: number,
+  variantId: number,
 };

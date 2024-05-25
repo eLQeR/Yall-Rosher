@@ -6,14 +6,28 @@ export default function SelectSize({ selectedId, sizes, onChange }) {
     <div className={styles.sizes}>
       {sizes.length !== 0 ? (
         <>
-          <p>Розмір - {sizes[selectedId].size}</p>
+          {selectedId !== null && <p>Розмір - {sizes[selectedId].size}</p>}
           <div className={styles['sizes-box']}>
             {sizes.map((size, index) => (
               <div
-                id={index}
-                className={`${styles.size} hoverable`}
+                style={{
+                  border: '1px solid black',
+                  borderRadius: '10px',
+                  width: '55px',
+                  height: '35px',
+                  display: 'flex',
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                  backgroundColor:
+                    index === selectedId
+                      ? '#008B8B'
+                      : sizes[index].quantity < 1 && 'grey',
+                }}
                 key={index}
-                onClick={onChange}>
+                onClick={() => {
+                  if (index !== selectedId && sizes[index].quantity > 0)
+                    onChange(index, size.id);
+                }}>
                 {size.size}
               </div>
             ))}

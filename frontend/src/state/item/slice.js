@@ -11,20 +11,25 @@ const itemSlice = createSlice({
   initialState,
   reducers: (create) => ({
     addToCart: create.reducer((state, action) => {
-      const { itemData, sizeId } = action.payload;
+      const { itemData, variantId } = action.payload;
+      const variant = itemData.sizes.find((item) => item.id === variantId);
+
       state.cartItems.push({
         id: itemData.id,
         image: itemData.images[0].image,
         price: itemData.price,
         name: itemData.name,
-        item: itemData.sizes[sizeId],
+        size: variant.size,
+        color: variant.color.color,
       });
 
-      state.cartItemIds.push(itemData.sizes[sizeId].id);
+      state.cartItemIds.push(variantId);
     }),
     removeFromCart: create.reducer((state, action) => {
-      const sizeId = action.payload;
-      const index = state.cartItemIds.indexOf(sizeId);
+      const variantId = action.payload;
+
+      const index = state.cartItemIds.indexOf(variantId);
+
       if (index !== -1) {
         state.cartItems.splice(index, 1);
         state.cartItemIds.splice(index, 1);

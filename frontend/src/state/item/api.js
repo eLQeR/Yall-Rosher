@@ -53,6 +53,7 @@ export const itemApi = createApi({
         method: 'POST',
         body: data,
       }),
+      invalidatesTags: ['Item'],
     }),
   }),
 });

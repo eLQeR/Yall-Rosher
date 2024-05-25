@@ -5,7 +5,7 @@ import CartItem from '../components/CartItem';
 import CartSubmitForm from '../components/CartSubmitForm';
 
 const Cart = () => {
-  const { cartItems } = useSelector((state) => state.itemSlice);
+  const { cartItems, cartItemIds } = useSelector((state) => state.itemSlice);
   const { user } = useSelector((state) => state.userSlice);
 
   if (!user) return <Navigate to="/login" />;
@@ -25,14 +25,14 @@ const Cart = () => {
     <div className={styles['items-page']}>
       <CartSubmitForm />
       <div className={styles.items}>
-        {cartItems.map((item) => (
-          <div key={item.item.id}>
+        {cartItems.map((item, index) => (
+          <div key={item.id}>
             <CartItem
-              id={item.item.id}
+              variantId={cartItemIds[index]}
               itemId={item.id}
               img={item.image}
-              size={item.item.size}
-              color={item.item.color.color}
+              size={item.size}
+              color={item.color}
               price={+item.price}
             />
           </div>
