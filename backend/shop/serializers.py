@@ -75,7 +75,6 @@ class SemiCategorySerializer(serializers.ModelSerializer):
 
 
 class OrderItemSerializer(serializers.ModelSerializer):
-    # item = serializers.PrimaryKeyRelatedField(queryset=VariantOfItem.objects.all(), source="variant_of_item.id")
 
     class Meta:
         model = OrderItem
@@ -95,8 +94,6 @@ class OrderSerializer(serializers.ModelSerializer):
     items = OrderItemSerializer(
         many=True,
         read_only=False,
-        allow_null=False,
-        allow_empty=False
     )
 
     class Meta:
@@ -110,28 +107,42 @@ class OrderSerializer(serializers.ModelSerializer):
             "items"
         )
 
-    # def validate(self, attrs):
-    #     data = super(OrderSerializer, self).validate(attrs=attrs)
-    #     # Order.validate_order(
-    #     #     data["items"], ValidationError
-    #     # )
-    #     return data
+    def validate(self, attrs):
+        data = super(OrderSerializer, self).validate(attrs=attrs)
+        Order.validate_order(
+            data["items"], ValidationError
+        )
+        return data
 
     def create(self, validated_data):
-        # items_data = validated_data.pop('items')
-        print("val")
-        print(validated_data)
-        order = Order.objects.create(**validated_data)
-        # for item_data in items_data:
-        #     item = item_data["variant_of_item"]
-        #     item.quantity -= quantity
-        #     item.save()
-        #     OrderItem.objects.create(order=order, **item_data)
-        return order
+        items_data = validated_data.pop('items')
+        with transaction.atomic():
+            order = Order.objects.create(**validated_data)
+            for item_data in items_data:
+                print("item_data")
+                print(item_data)
+                item = item_data["variant_of_item"]
+                quantity = item_data["quantity"]
+                item.quantity -= quantity
+                item.save()
+                OrderItem.objects.create(order=order, **item_data)
+            return order
 
 
-# class OrderDetailSerializer(OrderSerializer):
-#     items = VariantOfItemSerializer(many=True, read_only=False)
+class OrderListSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Order
+        fields = (
+            "id",
+            "address",
+            "postal_code",
+            "city",
+            "created",
+        )
+
+
+class OrderDetailSerializer(OrderSerializer):
+    items = VariantOfItemSerializer(many=True, read_only=False)
 
 
 class VariantOfItemListSerializer(serializers.ModelSerializer):

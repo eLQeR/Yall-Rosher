@@ -17,7 +17,7 @@ from shop.serializers import (
     VariantOfItemDetailSerializer,
     VariantOfItemSerializer,
     ItemDetailSerializer,
-    VariantOfItemListSerializer,
+    VariantOfItemListSerializer, OrderDetailSerializer, OrderListSerializer,
 )
 
 
@@ -25,7 +25,6 @@ class SemiCategoryViewSet(viewsets.ModelViewSet):
     queryset = SemiCategory.objects.all()
     serializer_class = SemiCategorySerializer
     permission_classes = [IsAdminOrReadOnly]
-
 
     def get_queryset(self):
         queryset = self.queryset
@@ -50,12 +49,14 @@ class ItemViewSet(viewsets.ModelViewSet):
         return ItemSerializer
 
     def get_queryset(self):
+
         queryset = self.queryset
         semi_category = self.request.query_params.get("category")
 
         if semi_category:
             queryset = queryset.filter(semi_category_id=semi_category)
         return queryset
+
 
 class VariantOfItemViewSet(viewsets.ModelViewSet):
     queryset = VariantOfItem.objects.all()
@@ -151,15 +152,10 @@ class OrderViewSet(
         return Order.objects.filter(user=self.request.user)
 
     def get_serializer_class(self):
+        if self.action == 'retrieve':
+            return OrderDetailSerializer
         if self.action == 'list':
-            return OrderSerializer
-        # if self.action == 'create':
-        #     return OrderCreateSerializer
-        print("lsssss")
-        print("lsssss")
-        print("lsssss")
-        print("lsssss")
-        print("lsssss")
+            return OrderListSerializer
         return OrderSerializer
 
     def perform_create(self, serializer):
