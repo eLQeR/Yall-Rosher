@@ -100,6 +100,7 @@ class VariantOfItem(models.Model):
     quantity = models.PositiveIntegerField(default=0)
     color = models.ForeignKey(to=Color, on_delete=models.CASCADE, null=True)
     item = models.ForeignKey(to=Item, on_delete=models.CASCADE, related_name="sizes", null=True)
+    variant_of_item = models.PositiveIntegerField(default=1)
 
     def __str__(self):
         return f"{self.item}-{self.color}-{self.size}"
@@ -129,10 +130,12 @@ class Order(models.Model):
 
     @staticmethod
     def validate_order(items: [VariantOfItem], error_to_raise):
-        for item in items:
-            # print(VariantOfItem.objects.get(pk=item_id))
-            if item.quantity <= 0:
-                raise error_to_raise("There are no such items avaliable.")
+        for order_item_dict in items:
+            item = order_item_dict["variant_of_item"]
+            if not item.quantity:
+                raise error_to_raise("There are no such item")
+            if order_item_dict["quantity"] > item.quantity:
+                raise error_to_raise("Quantity must be between 1 and " + str(item.quantity))
 
 
 def create_custom_path(instance, filename):
