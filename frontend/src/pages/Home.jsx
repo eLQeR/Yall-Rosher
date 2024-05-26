@@ -7,7 +7,9 @@ const Home = () => {
     <div className="centered-container">
       <input
         readOnly
-        value={`Welcome to Yall Rosher${user && ', ' + user.username}!`}
+        value={`Welcome to Yall Rosher${
+          user !== null && ', ' + user.username
+        }!`}
         className="stylish-text-field"
       />
     </div>

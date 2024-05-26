@@ -5,18 +5,12 @@ import storage from 'redux-persist/lib/storage';
 import { itemApi, itemReducer } from './item';
 
 const persistedItemReducer = persistReducer(
-  {
-    key: 'item',
-    storage,
-  },
+  { key: 'item', storage },
   itemReducer,
 );
 
 const persistedUserReducer = persistReducer(
-  {
-    key: 'user',
-    storage,
-  },
+  { key: 'user', storage },
   userReducer,
 );
 

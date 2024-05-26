@@ -41,11 +41,11 @@ export default function CartSubmitForm() {
     <>
       {modalOpened && (
         <Modal
-          title="Complete a purchase?"
-          body={`Total price is: ${cartItems.reduce(
+          title="Оформити замовлення?"
+          body={`Загальна ціна: ${cartItems.reduce(
             (acc, item) => acc + +item.price,
             0,
-          )} UAH. This action is irreversable`}
+          )} UAH. Цю дію не можна відмінити`}
           onProceed={onProceed}
           onClose={() => setModalOpened(false)}
         />

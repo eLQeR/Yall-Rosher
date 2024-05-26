@@ -16,10 +16,10 @@ export default function Modal({ title, body, onClose, onProceed }) {
               await onProceed();
               onClose();
             }}>
-            Continue
+            Продовжити
           </button>
           <button onClick={onClose} id="cancelBtn">
-            Cancel
+            Назад
           </button>
         </div>
       </div>

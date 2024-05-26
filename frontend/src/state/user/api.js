@@ -25,12 +25,6 @@ export const userApi = createApi({
           body: credentials,
         };
       },
-      transformResponse: (res) => {
-        return {
-          refreshToken: res.refresh,
-          accessToken: res.access,
-        };
-      },
     }),
     getUser: builder.query({
       query: () => '/user/me/',
