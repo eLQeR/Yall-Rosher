@@ -1,0 +1,26 @@
+services:
+  backend:
+    networks:
+      - app
+    image: jadery/yall-rosher:be
+    ports:
+      - '8000:8000'
+    container_name: backend
+    restart: unless-stopped
+
+  frontend:
+    networks:
+      - app
+    depends_on:
+      - backend
+    image: jadery/yall-rosher:fe
+    ports:
+      - '8080:8080'
+    container_name: frontend
+    restart: unless-stopped
+    environment:
+      - NODE_ENV=development
+
+networks:
+  app:
+    driver: bridge
