@@ -2,7 +2,10 @@ import { fetchBaseQuery } from '@reduxjs/toolkit/query';
 import { logout, setTokens } from './user/slice';
 
 const baseQuery = fetchBaseQuery({
-  baseUrl: 'http://yall-rosher.pp.ua/api',
+  baseUrl:
+    process.env.NODE_ENV === 'development'
+      ? 'http://localhost:8000'
+      : 'https://yall-rosher.pp.ua/api',
   credentials: 'omit',
   prepareHeaders: (headers, { getState }) => {
     const accessToken = getState().userSlice.accessToken;

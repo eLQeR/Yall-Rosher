@@ -11,11 +11,7 @@ export default function HeaderDropdowns() {
   return (
     <div className={styles.dropdowns}>
       {Object.keys(data).map((key) => (
-        <TextWithDropdown
-          key={key}
-          name={key}
-          data={Object.groupBy(data[key], ({ category }) => category)}
-        />
+        <TextWithDropdown key={key} name={key} data={data[key]} />
       ))}
     </div>
   );

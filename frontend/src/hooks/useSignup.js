@@ -13,7 +13,6 @@ export const useSignup = () => {
 
   const handleFormSubmit = async (e) => {
     e.preventDefault();
-    console.log(JSON.stringify(formData));
     await signup(formData)
       .unwrap()
       .then(() => navigate('/login'))

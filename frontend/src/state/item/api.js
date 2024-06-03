@@ -36,13 +36,15 @@ export const itemApi = createApi({
       transformResponse: (data) => {
         const mapping = {};
         data.forEach((category) => {
-          if (!mapping[category.type]) mapping[category.type] = [];
-          mapping[category.type].push({
+          if (!mapping[category.type]) mapping[category.type] = {};
+          if (!mapping[category.type][category.category])
+            mapping[category.type][category.category] = [];
+          mapping[category.type][category.category].push({
             id: category.id,
             name: category.name,
-            category: category.category,
           });
         });
+        console.log(mapping);
         return mapping;
       },
       providesTags: ['Categories'],
