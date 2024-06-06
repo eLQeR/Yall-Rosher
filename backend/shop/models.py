@@ -5,6 +5,7 @@ from django.contrib.auth import get_user_model
 from django.contrib.auth.models import AbstractUser
 from django.db import models
 from django.utils.text import slugify
+from rest_framework.generics import get_object_or_404
 
 
 class Type(models.TextChoices):
@@ -115,6 +116,7 @@ class Order(models.Model):
     paid = models.BooleanField(default=False)
     items = models.ManyToManyField(to=VariantOfItem, through="OrderItem", related_name="orders")
     is_canceled = models.BooleanField(default=False)
+    cost = models.DecimalField(max_digits=12, decimal_places=2, default=0)
 
     class Meta:
         ordering = ('-created',)
@@ -124,9 +126,15 @@ class Order(models.Model):
     def __str__(self):
         return 'Order {}'.format(self.id)
 
-    @property
     def get_total_cost(self):
-        return round(sum(item.price for item in self.items.all()), 2)
+        cost = 0
+        order_items = OrderItem.objects.filter(order_id=self.pk)
+        if order_items.exists():
+            for order_item in order_items:
+                variant_item = get_object_or_404(VariantOfItem, id=order_item.variant_of_item.pk)
+                cost += variant_item.item.price * order_item.quantity
+            return round(cost, 2)
+        return 0
 
     @staticmethod
     def validate_order(items: [VariantOfItem], error_to_raise):
