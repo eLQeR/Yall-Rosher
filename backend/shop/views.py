@@ -136,10 +136,16 @@ class OrderViewSet(
     authentication_classes = (JWTAuthentication,)
     permission_classes = (IsAuthenticated,)
 
-    @action(detail=True, methods=['POST'], url_path="cancel-order")
+    @action(detail=True, methods=['GET'], url_path="cancel-order")
     def cancel_order(self, request, pk=None):
         order = self.get_object()
         order.is_canceled = True
+        order_items = OrderItem.objects.filter(order_id=order.pk)
+        for order_item in order_items:
+            quantity = order_item.quantity
+            item = get_object_or_404(VariantOfItem, id=order_item.variant_of_item.pk)
+            item.quantity += quantity
+            item.save()
         order.save()
         return Response(status=status.HTTP_200_OK)
 
