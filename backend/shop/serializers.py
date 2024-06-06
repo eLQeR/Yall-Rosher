@@ -138,6 +138,8 @@ class OrderListSerializer(serializers.ModelSerializer):
             "postal_code",
             "city",
             "created",
+            "is_canceled",
+            "cost",
         )
 
 
