@@ -130,6 +130,7 @@ class OrderSerializer(serializers.ModelSerializer):
 
 
 class OrderListSerializer(serializers.ModelSerializer):
+    image = serializers.ImageField(source="items.first.images.first.image", read_only=True)
     class Meta:
         model = Order
         fields = (
@@ -140,6 +141,7 @@ class OrderListSerializer(serializers.ModelSerializer):
             "created",
             "is_canceled",
             "cost",
+            "image",
         )
 
 
