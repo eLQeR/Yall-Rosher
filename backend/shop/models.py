@@ -141,9 +141,16 @@ class Order(models.Model):
         for order_item_dict in items:
             item = order_item_dict["variant_of_item"]
             if not item.quantity:
-                raise error_to_raise("There are no such item")
+                raise error_to_raise(code=400, detail="There are no such item")
             if order_item_dict["quantity"] > item.quantity:
-                raise error_to_raise("Quantity must be between 1 and " + str(item.quantity))
+                raise error_to_raise(
+                    code=400,
+                    detail="Quantity must be between 1 and " + str(item.quantity)
+                )
+
+    @property
+    def order_number(self):
+        return 1000000 + self.pk
 
 
 def create_custom_path(instance, filename):
