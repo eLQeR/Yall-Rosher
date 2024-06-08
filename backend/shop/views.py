@@ -1,20 +1,17 @@
-from django.contrib.auth import get_user_model
 from django.shortcuts import get_object_or_404
 from drf_spectacular.utils import extend_schema, OpenApiParameter, OpenApiExample
 from rest_framework import viewsets, generics, mixins, status
 from rest_framework.decorators import action
-from rest_framework.permissions import IsAuthenticated, IsAdminUser
 from rest_framework.response import Response
 from rest_framework_simplejwt.authentication import JWTAuthentication
 
 from shop.models import Item, SemiCategory, Order, VariantOfItem, OrderItem
-from shop.permissions import IsAdminOrReadOnly
+from shop.permissions import IsAdminOrReadOnly, CanCancelOrCreateOrGet
 from shop.serializers import (
     SemiCategorySerializer,
     ItemSerializer,
     ItemListSerializer,
     OrderSerializer,
-    VariantOfItemDetailSerializer,
     VariantOfItemSerializer,
     ItemDetailSerializer,
     VariantOfItemListSerializer, OrderDetailSerializer, OrderListSerializer,
@@ -134,7 +131,7 @@ class OrderViewSet(
     queryset = Order.objects.all()
     serializer_class = OrderSerializer
     authentication_classes = (JWTAuthentication,)
-    permission_classes = (IsAuthenticated,)
+    permission_classes = (CanCancelOrCreateOrGet,)
 
     @action(detail=True, methods=['POST'], url_path="cancel-order")
     def cancel_order(self, request, pk=None):
@@ -150,7 +147,13 @@ class OrderViewSet(
         return Response({"result": "The order has been cancelled"}, status=status.HTTP_200_OK)
 
     def get_queryset(self):
-        return Order.objects.filter(user=self.request.user)
+        queryset = self.queryset
+        if self.action == "list":
+           queryset = queryset.select_related().prefetch_related(
+                "items__item__images",
+                "items__item__sizes",
+            )
+        return queryset.filter(user=self.request.user)
 
     def get_serializer_class(self):
         if self.action == 'retrieve':
