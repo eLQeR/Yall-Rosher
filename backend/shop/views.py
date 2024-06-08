@@ -136,7 +136,7 @@ class OrderViewSet(
     authentication_classes = (JWTAuthentication,)
     permission_classes = (IsAuthenticated,)
 
-    @action(detail=True, methods=['GET'], url_path="cancel-order")
+    @action(detail=True, methods=['POST'], url_path="cancel-order")
     def cancel_order(self, request, pk=None):
         order = self.get_object()
         order.is_canceled = True
@@ -147,7 +147,7 @@ class OrderViewSet(
             item.quantity += quantity
             item.save()
         order.save()
-        return Response(status=status.HTTP_200_OK)
+        return Response({"result": "The order has been cancelled"}, status=status.HTTP_200_OK)
 
     @action(detail=True, methods=['GET'], url_path="get-cost")
     def get_cost(self, request, pk=None):
