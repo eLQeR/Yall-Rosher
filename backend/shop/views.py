@@ -149,11 +149,6 @@ class OrderViewSet(
         order.save()
         return Response({"result": "The order has been cancelled"}, status=status.HTTP_200_OK)
 
-    @action(detail=True, methods=['GET'], url_path="get-cost")
-    def get_cost(self, request, pk=None):
-        order = self.get_object()
-        return Response({"cost": order.get_total_cost}, status=status.HTTP_200_OK)
-
     def get_queryset(self):
         return Order.objects.filter(user=self.request.user)
 
