@@ -150,6 +150,7 @@ class OrderListSerializer(serializers.ModelSerializer):
             "is_canceled",
             "cost",
             "image",
+            "status",
             "order_number",
         )
 
@@ -169,6 +170,7 @@ class OrderDetailSerializer(OrderListSerializer):
             "cost",
             "image",
             "items",
+            "status",
             "order_number",
         )
 

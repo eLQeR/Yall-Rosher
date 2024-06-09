@@ -8,21 +8,6 @@ from django.utils.text import slugify
 from rest_framework.generics import get_object_or_404
 
 
-class Type(models.TextChoices):
-    MEN = "Чоловіче"
-    WOMEN = "Жіноче"
-    UNISEX = "Унісекс"
-    CHILD = "Дитяче"
-    GIRL = "Дівчаче"
-    BOY = "Хлопчаче"
-
-
-class Categories(models.TextChoices):
-    CLOTHES = "Одяг"
-    SHOES = "Взуття"
-    ACCESSORIES = "Аксесуари"
-
-
 class Sizes(models.TextChoices):
     XSS = "XXS"
     XS = "XS"
@@ -44,8 +29,20 @@ class Sizes(models.TextChoices):
     S45 = 45
 
 
-
 class SemiCategory(models.Model):
+    class Type(models.TextChoices):
+        MEN = "Чоловіче"
+        WOMEN = "Жіноче"
+        UNISEX = "Унісекс"
+        CHILD = "Дитяче"
+        GIRL = "Дівчаче"
+        BOY = "Хлопчаче"
+
+    class Categories(models.TextChoices):
+        CLOTHES = "Одяг"
+        SHOES = "Взуття"
+        ACCESSORIES = "Аксесуари"
+
     name = models.CharField(max_length=30)
     type = models.CharField(choices=Type.choices, max_length=30)
     category = models.CharField(choices=Categories.choices, max_length=30)
@@ -108,6 +105,12 @@ class VariantOfItem(models.Model):
 
 
 class Order(models.Model):
+    class Status(models.TextChoices):
+        PENDING = 'Очікує'
+        PROCESSING = 'Обробляється'
+        SHIPPED = 'Відправленно'
+        DELIVERED = 'Доставленно'
+
     user = models.ForeignKey(to=get_user_model(), on_delete=models.DO_NOTHING, related_name="orders")
     address = models.CharField(max_length=250)
     postal_code = models.CharField(max_length=20)
@@ -117,6 +120,7 @@ class Order(models.Model):
     items = models.ManyToManyField(to=VariantOfItem, through="OrderItem", related_name="orders")
     is_canceled = models.BooleanField(default=False)
     cost = models.DecimalField(max_digits=12, decimal_places=2, default=0)
+    status = models.CharField(max_length=20, choices=Status.choices, default=Status.PENDING)
 
     class Meta:
         ordering = ('-created',)
