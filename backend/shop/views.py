@@ -2,6 +2,7 @@ from django.shortcuts import get_object_or_404
 from drf_spectacular.utils import extend_schema, OpenApiParameter, OpenApiExample
 from rest_framework import viewsets, generics, mixins, status
 from rest_framework.decorators import action
+from rest_framework.pagination import PageNumberPagination
 from rest_framework.response import Response
 from rest_framework_simplejwt.authentication import JWTAuthentication
 
@@ -32,10 +33,17 @@ class SemiCategoryViewSet(viewsets.ModelViewSet):
         return queryset
 
 
+class MediumResultsSetPagination(PageNumberPagination):
+    page_size = 20
+    page_size_query_param = "page_size"
+    max_page_size = 20
+
+
 class ItemViewSet(viewsets.ModelViewSet):
     queryset = Item.objects.all()
     serializer_class = ItemSerializer
     permission_classes = [IsAdminOrReadOnly]
+    pagination_class = MediumResultsSetPagination
 
     def get_serializer_class(self):
         if self.action == "list":
@@ -122,6 +130,12 @@ class VariantOfItemViewSet(viewsets.ModelViewSet):
         return queryset
 
 
+class LowResultsSetPagination(PageNumberPagination):
+    page_size = 10
+    page_size_query_param = "page_size"
+    max_page_size = 10
+
+
 class OrderViewSet(
     mixins.ListModelMixin,
     mixins.CreateModelMixin,
@@ -132,6 +146,7 @@ class OrderViewSet(
     serializer_class = OrderSerializer
     authentication_classes = (JWTAuthentication,)
     permission_classes = (CanCancelOrCreateOrGet,)
+    pagination_class = LowResultsSetPagination
 
     @action(detail=True, methods=['POST'], url_path="cancel-order")
     def cancel_order(self, request, pk=None):
