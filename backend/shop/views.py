@@ -1,20 +1,18 @@
-from django.contrib.auth import get_user_model
 from django.shortcuts import get_object_or_404
 from drf_spectacular.utils import extend_schema, OpenApiParameter, OpenApiExample
 from rest_framework import viewsets, generics, mixins, status
 from rest_framework.decorators import action
-from rest_framework.permissions import IsAuthenticated, IsAdminUser
+from rest_framework.pagination import PageNumberPagination
 from rest_framework.response import Response
 from rest_framework_simplejwt.authentication import JWTAuthentication
 
 from shop.models import Item, SemiCategory, Order, VariantOfItem, OrderItem
-from shop.permissions import IsAdminOrReadOnly
+from shop.permissions import IsAdminOrReadOnly, CanCancelOrCreateOrGet
 from shop.serializers import (
     SemiCategorySerializer,
     ItemSerializer,
     ItemListSerializer,
     OrderSerializer,
-    VariantOfItemDetailSerializer,
     VariantOfItemSerializer,
     ItemDetailSerializer,
     VariantOfItemListSerializer, OrderDetailSerializer, OrderListSerializer,
@@ -35,10 +33,17 @@ class SemiCategoryViewSet(viewsets.ModelViewSet):
         return queryset
 
 
+class MediumResultsSetPagination(PageNumberPagination):
+    page_size = 20
+    page_size_query_param = "page_size"
+    max_page_size = 20
+
+
 class ItemViewSet(viewsets.ModelViewSet):
     queryset = Item.objects.all()
     serializer_class = ItemSerializer
     permission_classes = [IsAdminOrReadOnly]
+    pagination_class = MediumResultsSetPagination
 
     def get_serializer_class(self):
         if self.action == "list":
@@ -125,6 +130,12 @@ class VariantOfItemViewSet(viewsets.ModelViewSet):
         return queryset
 
 
+class LowResultsSetPagination(PageNumberPagination):
+    page_size = 10
+    page_size_query_param = "page_size"
+    max_page_size = 10
+
+
 class OrderViewSet(
     mixins.ListModelMixin,
     mixins.CreateModelMixin,
@@ -134,22 +145,30 @@ class OrderViewSet(
     queryset = Order.objects.all()
     serializer_class = OrderSerializer
     authentication_classes = (JWTAuthentication,)
-    permission_classes = (IsAuthenticated,)
+    permission_classes = (CanCancelOrCreateOrGet,)
+    pagination_class = LowResultsSetPagination
 
     @action(detail=True, methods=['POST'], url_path="cancel-order")
     def cancel_order(self, request, pk=None):
         order = self.get_object()
         order.is_canceled = True
+        order_items = OrderItem.objects.filter(order_id=order.pk)
+        for order_item in order_items:
+            quantity = order_item.quantity
+            item = get_object_or_404(VariantOfItem, id=order_item.variant_of_item.pk)
+            item.quantity += quantity
+            item.save()
         order.save()
-        return Response(status=status.HTTP_200_OK)
-
-    @action(detail=True, methods=['GET'], url_path="get-cost")
-    def get_cost(self, request, pk=None):
-        order = self.get_object()
-        return Response({"cost": order.get_total_cost}, status=status.HTTP_200_OK)
+        return Response({"result": "The order has been cancelled"}, status=status.HTTP_200_OK)
 
     def get_queryset(self):
-        return Order.objects.filter(user=self.request.user)
+        queryset = self.queryset
+        if self.action == "list":
+           queryset = queryset.select_related().prefetch_related(
+                "items__item__images",
+                "items__item__sizes",
+            )
+        return queryset.filter(user=self.request.user)
 
     def get_serializer_class(self):
         if self.action == 'retrieve':
