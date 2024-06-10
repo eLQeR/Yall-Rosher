@@ -1,3 +1,4 @@
+from django.core.exceptions import FieldError
 from django.shortcuts import get_object_or_404
 from drf_spectacular.utils import extend_schema, OpenApiParameter, OpenApiExample
 from rest_framework import viewsets, generics, mixins, status
@@ -5,6 +6,8 @@ from rest_framework.decorators import action
 from rest_framework.pagination import PageNumberPagination
 from rest_framework.response import Response
 from rest_framework_simplejwt.authentication import JWTAuthentication
+from rest_framework.exceptions import ValidationError
+
 
 from shop.models import Item, SemiCategory, Order, VariantOfItem, OrderItem
 from shop.permissions import IsAdminOrReadOnly, CanCancelOrCreateOrGet
@@ -56,10 +59,27 @@ class ItemViewSet(viewsets.ModelViewSet):
     def get_queryset(self):
 
         queryset = self.queryset
+        name = self.request.query_params.get("name")
         semi_category = self.request.query_params.get("category")
+        ordering = self.request.query_params.get("ordering")
+
+        if name:
+            queryset = queryset.filter(name__icontains=name)
 
         if semi_category:
             queryset = queryset.filter(semi_category_id=semi_category)
+
+        if self.action == "list":
+            queryset = queryset.prefetch_related("images")
+
+        if ordering:
+            try:
+                queryset = queryset.order_by(ordering)
+            except FieldError:
+                raise ValidationError(
+                    code=400,
+                    detail="Invalid ordering"
+                )
         return queryset
 
 
@@ -165,10 +185,10 @@ class OrderViewSet(
         queryset = self.queryset
         if self.action == "list":
            queryset = queryset.select_related().prefetch_related(
-                "items__item__images",
-                "items__item__sizes",
+                "items",
+                "items__item",
             )
-        return queryset.filter(user=self.request.user)
+        return queryset.filter(user=self.request.user).select_related('user').prefetch_related('items', 'items__item')
 
     def get_serializer_class(self):
         if self.action == 'retrieve':
