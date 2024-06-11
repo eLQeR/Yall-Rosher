@@ -1,7 +1,6 @@
 import uuid
 import faker
 
-
 from rest_framework.exceptions import ErrorDetail
 from shop.models import Item, Order, VariantOfItem, SemiCategory, Color, OrderItem
 from django.test import TestCase
@@ -36,6 +35,7 @@ def sample_variants_of_item(**kwargs):
     color = sample_color()
     item = Item.objects.create(**item_data)
     item.colors.add(color)
+    item.save()
     return (
         VariantOfItem.objects.create(item=item, color=color, size="L", quantity=10),
         VariantOfItem.objects.create(item=item, color=color, size="XL", quantity=10)
@@ -90,7 +90,7 @@ class AuthenticatedUserApiTests(TestCase):
         response = self.client.get(ORDER_URL)
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(len(response.data), 0)
+        self.assertEqual(len(response.data["results"]), 0)
 
     def test_get_created_orders(self):
         for _ in range(3):
@@ -99,8 +99,25 @@ class AuthenticatedUserApiTests(TestCase):
         response = self.client.get(ORDER_URL)
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(len(response.data), 3)
-        self.assertEqual(response.data, OrderListSerializer(orders, many=True).data)
+        self.assertEqual(len(response.data["results"]), 3)
+        self.assertEqual(response.data["results"], OrderListSerializer(orders, many=True).data)
+
+    def test_orders_are_paginated(self):
+        for _ in range(11):
+            sample_order(self.user)
+        user_orders = Order.objects.filter(user=self.user)
+        orders = user_orders[:10]
+        paginated_order = user_orders[10:]
+        response = self.client.get(ORDER_URL)
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.data["count"], 11)
+        self.assertEqual(len(response.data["results"]), 10)
+        self.assertEqual(response.data["results"], OrderListSerializer(orders, many=True).data)
+        response = self.client.get(response.data["next"])
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.data["results"], OrderListSerializer(paginated_order, many=True).data)
+
 
     def test_create_order(self):
         order_count = Order.objects.filter(user=self.user).count()
