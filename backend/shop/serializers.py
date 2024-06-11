@@ -1,10 +1,16 @@
-from django.contrib.auth import get_user_model
 from django.db import transaction
-from django.shortcuts import get_object_or_404
 from rest_framework import serializers
 from rest_framework.exceptions import ValidationError
 
-from shop.models import *
+from shop.models import (
+    VariantOfItem,
+    Item,
+    Color,
+    OrderItem,
+    Order,
+    SemiCategory,
+    Gallery,
+)
 
 
 class VariantOfItemSerializer(serializers.ModelSerializer):
@@ -25,10 +31,27 @@ class GallerySerializer(serializers.ModelSerializer):
         fields = ("image",)
 
 
+class ItemCreateUpdateSerializer(serializers.ModelSerializer):
+    images = GallerySerializer(many=True, read_only=False, required=False)
+
+    class Meta:
+        model = Item
+        fields = (
+            "id",
+            "name",
+            "semi_category",
+            "article",
+            "price",
+            "colors",
+            "sizes",
+            "images",
+        )
+
+
 class ItemSerializer(serializers.ModelSerializer):
-    images = GallerySerializer(many=True, read_only=False)
-    sizes = VariantOfItemSerializer(many=True, read_only=False)
-    colors = ColorSerializer(many=True, read_only=False)
+    images = GallerySerializer(many=True, read_only=False, required=False)
+    sizes = VariantOfItemSerializer(many=True, read_only=False, required=False)
+    colors = ColorSerializer(many=True, read_only=False, required=False)
 
     class Meta:
         model = Item
@@ -137,7 +160,7 @@ class OrderSerializer(serializers.ModelSerializer):
 
 
 class OrderListSerializer(serializers.ModelSerializer):
-    image = serializers.ImageField(source="items.first.images.first.image", read_only=True)
+    image = serializers.ImageField(source="get_first_image_url", read_only=True)
 
     class Meta:
         model = Order
@@ -149,9 +172,9 @@ class OrderListSerializer(serializers.ModelSerializer):
             "created",
             "is_canceled",
             "cost",
-            "image",
             "status",
             "order_number",
+            "image",
         )
 
 
@@ -168,10 +191,10 @@ class OrderDetailSerializer(OrderListSerializer):
             "created",
             "is_canceled",
             "cost",
-            "image",
             "items",
             "status",
             "order_number",
+            "image",
         )
 
 
