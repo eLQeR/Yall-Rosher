@@ -78,7 +78,7 @@ class Item(models.Model):
     semi_category = models.ForeignKey(to=SemiCategory, on_delete=models.CASCADE, related_name="items")
     article = models.CharField(unique=True, max_length=12, blank=True, null=True)
     price = models.DecimalField(max_digits=12, decimal_places=2)
-    colors = models.ManyToManyField(to=Color)
+    colors = models.ManyToManyField(to=Color, blank=True)
 
     def __str__(self):
         return self.name
