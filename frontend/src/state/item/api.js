@@ -71,6 +71,14 @@ export const itemApi = createApi({
       }),
       providesTags: ['Orders'],
     }),
+
+    getSearchData: builder.query({
+      query: (url) => ({
+        // ?name=&page=2",
+        url,
+      }),
+      providesTags: ['Search'],
+    }),
   }),
 });
 
@@ -81,4 +89,5 @@ export const {
   useMakeOrderMutation,
   useGetOrdersQuery,
   useGetCancelOrderMutation,
+  useGetSearchDataQuery,
 } = itemApi;
