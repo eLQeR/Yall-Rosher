@@ -8,6 +8,7 @@ import SignUp from './pages/SignUp.jsx';
 import SignIn from './pages/SignIn.jsx';
 import Profile from './pages/Profile.jsx';
 import Cart from './pages/Cart.jsx';
+import Search from './pages/Search.jsx';
 
 const router = createBrowserRouter([
   {
@@ -41,6 +42,10 @@ const router = createBrowserRouter([
       {
         path: 'cart',
         element: <Cart />,
+      },
+      {
+        path: 'search',
+        element: <Search />,
       },
     ],
   },

@@ -20,3 +20,23 @@
   justify-content: center;
   gap: 25px;
 }
+
+.no-data {
+  margin: 50px;
+  text-align: center;
+}
+
+.pagination {
+  display: flex;
+  gap: 20px;
+  justify-content: center;
+  margin-block: 25px;
+}
+.pagination button {
+  padding: 10px 20px;
+  cursor: pointer;
+  display: flex;
+}
+.pagination button:disabled {
+  cursor: no-drop;
+}

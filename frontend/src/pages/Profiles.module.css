@@ -9,6 +9,9 @@
   cursor: pointer;
   display: flex;
 }
+.pagination button:disabled {
+  cursor: no-drop;
+}
 .orders {
   margin-top: 20px;
   display: flex;

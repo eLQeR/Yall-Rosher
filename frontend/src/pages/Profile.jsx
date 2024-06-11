@@ -52,28 +52,24 @@ const Profile = () => {
         {data.results.map((order) => {
           return (
             <li key={order.id} className={styles.order}>
-              {order.is_canceled ? (
+              {/* {order.is_canceled ? (
                 <img
-                  src={
-                    order.image
-                      ? order.image
-                      : 'http://127.0.0.1:8000/media/uploads/images/mom-long-895230fe-2792-4f1e-b453-c53b88591dcb.jpg'
-                  }
-                  alt='order photo'
                   className={styles['order-img--canceled']}
+                  src={order.image}
+                  alt={order.id}
                 />
               ) : (
                 <img
-                  src={
-                    order.image
-                      ? order.image
-                      : 'http://127.0.0.1:8000/media/uploads/images/mom-long-895230fe-2792-4f1e-b453-c53b88591dcb.jpg'
-                  }
-                  alt='order photo'
                   className={styles['order-img']}
+                  src={order.image}
+                  alt={order.id}
                 />
-              )}
-
+              )} */}
+              <img
+                className={styles['order-img']}
+                src={order.image}
+                alt={order.order_number}
+              />
               <div className={styles['order-right']}>
                 <p>
                   Номер замовлення: <b>{order.order_number}</b>

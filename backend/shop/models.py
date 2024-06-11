@@ -91,6 +91,7 @@ class Item(models.Model):
     class Meta:
         verbose_name = 'Товар'
         verbose_name_plural = "Товари"
+        ordering = ["name"]
 
 
 class VariantOfItem(models.Model):
@@ -108,8 +109,8 @@ class Order(models.Model):
     class Status(models.TextChoices):
         PENDING = 'Очікує'
         PROCESSING = 'Обробляється'
-        SHIPPED = 'Відправленно'
-        DELIVERED = 'Доставленно'
+        SHIPPED = 'Відправлено'
+        DELIVERED = 'Доставлено'
 
     user = models.ForeignKey(to=get_user_model(), on_delete=models.DO_NOTHING, related_name="orders")
     address = models.CharField(max_length=250)
@@ -155,6 +156,10 @@ class Order(models.Model):
     @property
     def order_number(self):
         return 1000000 + self.pk
+
+    @property
+    def get_first_image_url(self):
+        return self.items.first().images.first().image
 
 
 def create_custom_path(instance, filename):
