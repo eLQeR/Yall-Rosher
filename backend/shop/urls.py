@@ -1,5 +1,10 @@
 from django.urls import path, include
-from shop.views import SemiCategoryViewSet, ItemViewSet, OrderViewSet, VariantOfItemViewSet
+from shop.views import (
+    SemiCategoryViewSet,
+    ItemViewSet,
+    OrderViewSet,
+    VariantOfItemViewSet,
+)
 from rest_framework import routers
 
 router = routers.DefaultRouter()

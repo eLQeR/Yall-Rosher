@@ -38,15 +38,14 @@ def sample_variants_of_item(**kwargs):
     item.save()
     return (
         VariantOfItem.objects.create(item=item, color=color, size="L", quantity=10),
-        VariantOfItem.objects.create(item=item, color=color, size="XL", quantity=10)
+        VariantOfItem.objects.create(item=item, color=color, size="XL", quantity=10),
     )
 
 
 def sample_order(user=None, items=None, index=0):
     if user is None:
         user = User.objects.create_user(
-            username=f"{faker.user_name()}-{index}",
-            password='<PASSWORD>'
+            username=f"{faker.user_name()}-{index}", password="<PASSWORD>"
         )
     if items is None:
         items = sample_variants_of_item()
@@ -57,7 +56,9 @@ def sample_order(user=None, items=None, index=0):
         user=user,
     )
     for variant_of_item in items:
-        OrderItem.objects.create(order=order, variant_of_item=variant_of_item, quantity=1)
+        OrderItem.objects.create(
+            order=order, variant_of_item=variant_of_item, quantity=1
+        )
 
     return order
 
@@ -71,8 +72,7 @@ class AuthenticatedUserApiTests(TestCase):
         self.sample_order = Order.objects.first()
 
         self.user = User.objects.create_user(
-            username='Test-user',
-            password='<PASSWORD>'
+            username="Test-user", password="<PASSWORD>"
         )
 
         self.data = {
@@ -82,7 +82,7 @@ class AuthenticatedUserApiTests(TestCase):
             "items": [
                 {"variant_of_item": 1, "quantity": 1},
                 {"variant_of_item": 2, "quantity": 1},
-            ]
+            ],
         }
         self.client.force_authenticate(user=self.user)
 
@@ -100,7 +100,9 @@ class AuthenticatedUserApiTests(TestCase):
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(len(response.data["results"]), 3)
-        self.assertEqual(response.data["results"], OrderListSerializer(orders, many=True).data)
+        self.assertEqual(
+            response.data["results"], OrderListSerializer(orders, many=True).data
+        )
 
     def test_orders_are_paginated(self):
         for _ in range(11):
@@ -113,31 +115,31 @@ class AuthenticatedUserApiTests(TestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.data["count"], 11)
         self.assertEqual(len(response.data["results"]), 10)
-        self.assertEqual(response.data["results"], OrderListSerializer(orders, many=True).data)
+        self.assertEqual(
+            response.data["results"], OrderListSerializer(orders, many=True).data
+        )
         response = self.client.get(response.data["next"])
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(response.data["results"], OrderListSerializer(paginated_order, many=True).data)
-
+        self.assertEqual(
+            response.data["results"],
+            OrderListSerializer(paginated_order, many=True).data,
+        )
 
     def test_create_order(self):
         order_count = Order.objects.filter(user=self.user).count()
-        response = self.client.post(ORDER_URL, self.data, format='json')
+        response = self.client.post(ORDER_URL, self.data, format="json")
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
-        self.assertEqual(
-            Order.objects.filter(user=self.user).count(),
-            order_count + 1
-        )
+        self.assertEqual(Order.objects.filter(user=self.user).count(), order_count + 1)
         order = Order.objects.filter(user=self.user).last()
         self.assertEqual(response.data, OrderSerializer(order, many=False).data)
 
     def test_create_order_with_another_user_id(self):
         user = User.objects.create_user(
-            username='Test-for-Order',
-            password='<PASSWORD>'
+            username="Test-for-Order", password="<PASSWORD>"
         )
         self.data["user"] = user.id
 
-        response = self.client.post(ORDER_URL, self.data, format='json')
+        response = self.client.post(ORDER_URL, self.data, format="json")
 
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
         self.assertEqual(len(Order.objects.filter(user=user)), 0)
@@ -154,8 +156,7 @@ class AuthenticatedUserApiTests(TestCase):
             variants_of_item_field["variant_of_item"],
             [
                 ErrorDetail(
-                    'Invalid pk "100" - object does not exist.',
-                    code="does_not_exist"
+                    'Invalid pk "100" - object does not exist.', code="does_not_exist"
                 )
             ],
         )
@@ -187,8 +188,7 @@ class AuthenticatedUserApiTests(TestCase):
 
     def test_update_order_forbidden(self):
         another_user = User.objects.create_user(
-            username="Another User",
-            password="PASSWORD"
+            username="Another User", password="PASSWORD"
         )
         order = sample_order(user=another_user)
         data = {"user": self.id}
@@ -215,8 +215,7 @@ class AuthenticatedUserApiTests(TestCase):
 
     def test_get_someone_order(self):
         another_user = User.objects.create_user(
-            username="Another User",
-            password="PASSWORD"
+            username="Another User", password="PASSWORD"
         )
         order = sample_order(user=another_user)
         response = self.client.get(f"{ORDER_URL}{order.id}/")
@@ -242,7 +241,7 @@ class UnauthenticatedUserApiTests(TestCase):
             "items": [
                 {"variant_of_item": 1, "quantity": 1},
                 {"variant_of_item": 2, "quantity": 1},
-            ]
+            ],
         }
 
     def test_create_order_forbidden(self):

@@ -20,13 +20,12 @@ class CreateUserView(generics.CreateAPIView):
     put=extend_schema(
         summary="Update the profile",
         description="User can update his personal information, "
-                    "password length should be in range (5, 18)",
+        "password length should be in range (5, 18)",
     ),
     patch=extend_schema(
         summary="Partial update the profile",
         description="User can make partial update of his personal information,"
-                    " password length should be in range (5, 18)",
-
+        " password length should be in range (5, 18)",
     ),
     get=extend_schema(
         summary="Get his profile",

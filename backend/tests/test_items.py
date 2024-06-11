@@ -51,8 +51,7 @@ class AuthenticatedUserItemsTests(TestCase):
         self.sample_order = Item.objects.first()
 
         self.user = User.objects.create_user(
-            username='Test-user',
-            password='<PASSWORD>'
+            username="Test-user", password="<PASSWORD>"
         )
         self.semicategory = sample_semicategory()
         self.data = {
@@ -67,7 +66,8 @@ class AuthenticatedUserItemsTests(TestCase):
         response = self.client.get(ITEM_URL)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(
-            response.data["results"], ItemListSerializer(Item.objects.all(), many=True).data
+            response.data["results"],
+            ItemListSerializer(Item.objects.all(), many=True).data,
         )
 
     def test_filtered_items(self):
@@ -79,7 +79,9 @@ class AuthenticatedUserItemsTests(TestCase):
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(len(response.data["results"]), 10)
-        self.assertEqual(response.data["results"], ItemListSerializer(items, many=True).data)
+        self.assertEqual(
+            response.data["results"], ItemListSerializer(items, many=True).data
+        )
 
     def test_retrieve_item(self):
         item = sample_item()
@@ -93,7 +95,9 @@ class AuthenticatedUserItemsTests(TestCase):
             self.data,
         )
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
-        self.assertRaises(ObjectDoesNotExist, Item.objects.get, name="Test Created Item")
+        self.assertRaises(
+            ObjectDoesNotExist, Item.objects.get, name="Test Created Item"
+        )
 
     def test_update_item_forbidden(self):
         response = self.client.put(
@@ -101,7 +105,9 @@ class AuthenticatedUserItemsTests(TestCase):
             self.data,
         )
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
-        self.assertRaises(ObjectDoesNotExist, Item.objects.get, name="Test Created Item")
+        self.assertRaises(
+            ObjectDoesNotExist, Item.objects.get, name="Test Created Item"
+        )
 
     def test_partial_update_item_forbidden(self):
         response = self.client.patch(
@@ -109,7 +115,9 @@ class AuthenticatedUserItemsTests(TestCase):
             self.data,
         )
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
-        self.assertRaises(ObjectDoesNotExist, Item.objects.get, name="Test Created Item")
+        self.assertRaises(
+            ObjectDoesNotExist, Item.objects.get, name="Test Created Item"
+        )
 
     def test_delete_item_forbidden(self):
         response = self.client.delete(f"{ITEM_URL}1/")
@@ -126,7 +134,9 @@ class AuthenticatedUserItemsTests(TestCase):
 class AdminApiTests(TestCase):
     def setUp(self):
         self.client = APIClient()
-        user = User.objects.create_superuser(username='admin_user', password='<PASSWORD>')
+        user = User.objects.create_superuser(
+            username="admin_user", password="<PASSWORD>"
+        )
         self.client.force_authenticate(user=user)
         self.unique_id = uuid.uuid4()
         self.semi_category = sample_semicategory()
@@ -140,7 +150,7 @@ class AdminApiTests(TestCase):
         self.item_data.update(
             {
                 "semi_category": self.semi_category.pk,
-                "article": f"ART-{str(uuid.uuid4())[:6]}"
+                "article": f"ART-{str(uuid.uuid4())[:6]}",
             }
         )
         self.color_data = {"color": "Test Added Color", "hex": "#FFFFFF"}
@@ -174,25 +184,15 @@ class AdminApiTests(TestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.data["colors"], [color.pk])
         self.assertEqual(Item.objects.count(), 1)
-        self.assertEqual(
-            list(Item.objects.get(pk=1).colors.all()),
-            [color]
-        )
+        self.assertEqual(list(Item.objects.get(pk=1).colors.all()), [color])
 
     def test_add_variants_to_item(self):
         color = Color.objects.create(**self.color_data)
         variant_xl = VariantOfItem.objects.create(
-            item=self.item,
-            color=color,
-            size="XL",
-            quantity=10
-
+            item=self.item, color=color, size="XL", quantity=10
         )
         variant_xs = VariantOfItem.objects.create(
-            item=self.item,
-            color=color,
-            size="XS",
-            quantity=10
+            item=self.item, color=color, size="XS", quantity=10
         )
         response = self.client.patch(
             f"{ITEM_URL}{self.item.id}/",
@@ -203,10 +203,7 @@ class AdminApiTests(TestCase):
         )
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.data["colors"], [color.pk])
-        self.assertEqual(
-            response.data["sizes"],
-    [variant_xl.pk, variant_xs.pk]
-        )
+        self.assertEqual(response.data["sizes"], [variant_xl.pk, variant_xs.pk])
         self.assertEqual(Item.objects.count(), 1)
 
     def test_delete_item(self):

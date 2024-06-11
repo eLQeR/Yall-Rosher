@@ -9,6 +9,7 @@ https://docs.djangoproject.com/en/4.2/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.2/ref/settings/
 """
+
 from datetime import timedelta
 from pathlib import Path
 
@@ -25,7 +26,7 @@ SECRET_KEY = "django-insecure-85b#opn^bf-y5#z+dcl*uc2sq@2=v0r&v0^rjg54gziq)0pdas
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ["localhost","127.0.0.1","13.49.125.24","yall-rosher.pp.ua"]
+ALLOWED_HOSTS = ["localhost", "127.0.0.1", "13.49.125.24", "yall-rosher.pp.ua"]
 
 # Application definition
 
@@ -129,7 +130,7 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:5173",
     "http://localhost:8080",
-    "http://13.49.125.24:8080"
+    "http://13.49.125.24:8080",
 ]
 
 INTERNAL_IPS = [
@@ -148,12 +149,9 @@ REST_FRAMEWORK = {
     "DEFAULT_SCHEMA_CLASS": "drf_spectacular.openapi.AutoSchema",
     "DEFAULT_THROTTLE_CLASSES": [
         "rest_framework.throttling.AnonRateThrottle",
-        "rest_framework.throttling.UserRateThrottle"
+        "rest_framework.throttling.UserRateThrottle",
     ],
-    "DEFAULT_THROTTLE_RATES": {
-        "anon": "30/minute",
-        "user": "100/minute"
-    }
+    "DEFAULT_THROTTLE_RATES": {"anon": "30/minute", "user": "100/minute"},
 }
 
 SIMPLE_JWT = {

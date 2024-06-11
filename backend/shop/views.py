@@ -1,6 +1,11 @@
 from django.core.exceptions import FieldError
 from django.shortcuts import get_object_or_404
-from drf_spectacular.utils import extend_schema, OpenApiParameter, OpenApiExample, extend_schema_view
+from drf_spectacular.utils import (
+    extend_schema,
+    OpenApiParameter,
+    OpenApiExample,
+    extend_schema_view,
+)
 from rest_framework import viewsets, generics, mixins, status
 from rest_framework.decorators import action
 from rest_framework.pagination import PageNumberPagination
@@ -129,10 +134,7 @@ class ItemViewSet(viewsets.ModelViewSet):
             try:
                 queryset = queryset.order_by(ordering)
             except FieldError:
-                raise ValidationError(
-                    code=400,
-                    detail="Invalid ordering"
-                )
+                raise ValidationError(code=400, detail="Invalid ordering")
         return queryset
 
     @extend_schema(
@@ -147,16 +149,10 @@ class ItemViewSet(viewsets.ModelViewSet):
                 type=str,
             ),
             OpenApiParameter(
-                name="name",
-                description="Filter by name",
-                required=False,
-                type=str
+                name="name", description="Filter by name", required=False, type=str
             ),
             OpenApiParameter(
-                name="ordering",
-                description="Ordering items",
-                required=False,
-                type=str
+                name="ordering", description="Ordering items", required=False, type=str
             ),
         ],
         examples=[
@@ -165,7 +161,7 @@ class ItemViewSet(viewsets.ModelViewSet):
                 value={
                     "category": 4,
                     "name": "Світшот",
-                }
+                },
             )
         ],
     )
@@ -223,13 +219,10 @@ class VariantOfItemViewSet(viewsets.ModelViewSet):
                 name="color",
                 description="Filter by id of color",
                 required=False,
-                type=str
+                type=str,
             ),
             OpenApiParameter(
-                name="size",
-                description="Filter by size",
-                required=False,
-                type=str
+                name="size", description="Filter by size", required=False, type=str
             ),
         ],
         examples=[
@@ -239,7 +232,7 @@ class VariantOfItemViewSet(viewsets.ModelViewSet):
                     "item": 4,
                     "color": 3,
                     "size": "XXL",
-                }
+                },
             )
         ],
     )
@@ -291,7 +284,7 @@ class OrderViewSet(
     mixins.ListModelMixin,
     mixins.CreateModelMixin,
     mixins.RetrieveModelMixin,
-    viewsets.GenericViewSet
+    viewsets.GenericViewSet,
 ):
     queryset = Order.objects.all()
     serializer_class = OrderSerializer
@@ -299,7 +292,7 @@ class OrderViewSet(
     permission_classes = (CanCancelOrCreateOrGet,)
     pagination_class = LowResultsSetPagination
 
-    @action(detail=True, methods=['POST'], url_path="cancel-order")
+    @action(detail=True, methods=["POST"], url_path="cancel-order")
     def cancel_order(self, request, pk=None):
         order = self.get_object()
         order.is_canceled = True
@@ -310,7 +303,9 @@ class OrderViewSet(
             item.quantity += quantity
             item.save()
         order.save()
-        return Response({"result": "The order has been cancelled"}, status=status.HTTP_200_OK)
+        return Response(
+            {"result": "The order has been cancelled"}, status=status.HTTP_200_OK
+        )
 
     def get_queryset(self):
         queryset = self.queryset
@@ -322,9 +317,9 @@ class OrderViewSet(
         return queryset.filter(user=self.request.user)
 
     def get_serializer_class(self):
-        if self.action == 'retrieve':
+        if self.action == "retrieve":
             return OrderDetailSerializer
-        if self.action == 'list':
+        if self.action == "list":
             return OrderListSerializer
         return OrderSerializer
 

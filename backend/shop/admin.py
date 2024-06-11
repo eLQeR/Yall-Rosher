@@ -3,13 +3,13 @@ from .models import Item, SemiCategory, Order, Color, Gallery, VariantOfItem
 
 
 class GalleryInline(admin.TabularInline):
-    fk_name = 'item'
+    fk_name = "item"
     model = Gallery
     extra = 5
 
 
 class VariantOfItemInline(admin.TabularInline):
-    fk_name = 'item'
+    fk_name = "item"
     model = VariantOfItem
     extra = 5
 

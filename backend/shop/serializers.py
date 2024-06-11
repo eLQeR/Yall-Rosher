@@ -111,7 +111,7 @@ class OrderItemSerializer(serializers.ModelSerializer):
             if not (0 < quantity <= item.quantity):
                 raise ValidationError(
                     code=400,
-                    detail="Quantity must be between 1 and " + str(item.quantity)
+                    detail="Quantity must be between 1 and " + str(item.quantity),
                 )
 
             return data
@@ -125,24 +125,15 @@ class OrderSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Order
-        fields = (
-            "id",
-            "address",
-            "postal_code",
-            "city",
-            "created",
-            "items"
-        )
+        fields = ("id", "address", "postal_code", "city", "created", "items")
 
     def validate(self, attrs):
         data = super(OrderSerializer, self).validate(attrs=attrs)
-        Order.validate_order(
-            data["items"], ValidationError
-        )
+        Order.validate_order(data["items"], ValidationError)
         return data
 
     def create(self, validated_data):
-        items_data = validated_data.pop('items')
+        items_data = validated_data.pop("items")
         if not items_data:
             raise ValidationError(code=400, detail="No items provided")
         with transaction.atomic():
