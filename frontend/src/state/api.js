@@ -3,8 +3,9 @@ import { logout, setTokens } from './user/slice';
 
 const baseQuery = fetchBaseQuery({
   baseUrl:
+    // eslint-disable-next-line no-undef
     process.env.NODE_ENV === 'development'
-      ? 'http://localhost:8000'
+      ? 'http://127.0.0.1:8000/api'
       : 'https://yall-rosher.pp.ua/api',
   credentials: 'omit',
   prepareHeaders: (headers, { getState }) => {
@@ -26,14 +27,14 @@ export const baseQueryWithReauth = async (args, api, extraOptions) => {
         body: { refresh: refreshToken },
       },
       api,
-      extraOptions,
+      extraOptions
     );
 
     if (refreshResult?.data) {
       api.dispatch(
         setTokens({
           accessToken: refreshResult.data.access,
-        }),
+        })
       );
 
       return await baseQuery(args, api, extraOptions);

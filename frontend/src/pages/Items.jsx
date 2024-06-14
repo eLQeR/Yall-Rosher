@@ -14,7 +14,7 @@ const Items = () => {
   return (
     <div className={styles['items-page']}>
       <div className={styles.items}>
-        {items.map((item) => (
+        {items.results.map((item) => (
           <Link key={item.id} to={`/item/${item.id}`}>
             <Item
               name={item.name}

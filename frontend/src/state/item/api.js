@@ -5,7 +5,6 @@ import { baseQueryWithReauth } from '../api';
 export const itemApi = createApi({
   reducerPath: 'itemApi',
   baseQuery: baseQueryWithReauth,
-  tagTypes: ['Item', 'Items', 'Categories'],
 
   endpoints: (builder) => ({
     getAllItems: builder.query({
@@ -57,6 +56,29 @@ export const itemApi = createApi({
       }),
       invalidatesTags: ['Item'],
     }),
+
+    getOrders: builder.query({
+      query: (pageId) => ({
+        url: `/yall-rosher/orders/?page=${pageId}`,
+      }),
+      providesTags: ['Orders'],
+    }),
+
+    getCancelOrder: builder.mutation({
+      query: (canceledOrderId) => ({
+        url: `/yall-rosher/orders/${canceledOrderId}/cancel-order/`,
+        method: 'POST',
+      }),
+      providesTags: ['Orders'],
+    }),
+
+    getSearchData: builder.query({
+      query: (url) => ({
+        // ?name=&page=2",
+        url,
+      }),
+      providesTags: ['Search'],
+    }),
   }),
 });
 
@@ -65,4 +87,7 @@ export const {
   useGetItemDetailsQuery,
   useGetCategoriesQuery,
   useMakeOrderMutation,
+  useGetOrdersQuery,
+  useGetCancelOrderMutation,
+  useGetSearchDataQuery,
 } = itemApi;
