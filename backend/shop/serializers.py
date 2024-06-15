@@ -11,6 +11,7 @@ from shop.models import (
     SemiCategory,
     Gallery,
 )
+from shop.tasks import send_mail_order_creation
 
 
 class VariantOfItemSerializer(serializers.ModelSerializer):
@@ -132,22 +133,26 @@ class OrderSerializer(serializers.ModelSerializer):
         Order.validate_order(data["items"], ValidationError)
         return data
 
+    @transaction.atomic
     def create(self, validated_data):
         items_data = validated_data.pop("items")
         if not items_data:
             raise ValidationError(code=400, detail="No items provided")
-        with transaction.atomic():
-            order = Order.objects.create(**validated_data)
-
-            for item_data in items_data:
-                item = item_data["variant_of_item"]
-                quantity = item_data["quantity"]
-                item.quantity -= quantity
-                item.save()
-                OrderItem.objects.create(order=order, **item_data)
-                order.cost = order.get_total_cost()
-                order.save()
-            return order
+        order = Order.objects.create(**validated_data)
+        for item_data in items_data:
+            item = item_data["variant_of_item"]
+            quantity = item_data["quantity"]
+            item.quantity -= quantity
+            item.save()
+            OrderItem.objects.create(order=order, **item_data)
+            order.cost = order.get_total_cost()
+            order.save()
+        send_mail_order_creation.delay(
+            order_number=order.order_number,
+            order_cost=order.cost,
+            user_email=validated_data["user"].email
+        )
+        return order
 
 
 class OrderListSerializer(serializers.ModelSerializer):

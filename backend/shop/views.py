@@ -6,7 +6,7 @@ from drf_spectacular.utils import (
     OpenApiExample,
     extend_schema_view,
 )
-from rest_framework import viewsets, generics, mixins, status
+from rest_framework import viewsets, mixins, status
 from rest_framework.decorators import action
 from rest_framework.pagination import PageNumberPagination
 from rest_framework.response import Response
