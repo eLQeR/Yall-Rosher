@@ -1,0 +1,36 @@
+.signup-page {
+  width: 100vw;
+  height: 50vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+}
+
+h1 {
+  font-size: x-large;
+}
+
+.form {
+  width: 25vw;
+  min-width: 200px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+
+  input {
+    border: none;
+    border-bottom: 1px solid black;
+  }
+
+  input:focus {
+    outline: none;
+    transform: scale(1.05);
+  }
+}
+
+.error {
+  color: rgb(160, 57, 57);
+  font-weight: 700;
+}

@@ -1,0 +1,69 @@
+.dropdown {
+  position: absolute;
+  left: 0;
+  width: 100%;
+  background-color: lightgray;
+  display: flex;
+  justify-content: center;
+  visibility: hidden;
+}
+
+.text {
+  padding: 10px;
+}
+
+.text:hover {
+  text-decoration: underline 2px solid black;
+  cursor: default;
+}
+
+.wrapper {
+  border-top: 2px solid black;
+  border-bottom: 2px solid black;
+
+  visibility: visible;
+  width: 100%;
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  background-color: white;
+  animation: appear 0.5s;
+}
+
+@keyframes appear {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+.column {
+  padding: 10px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  font-size: large;
+}
+
+.column p {
+  text-transform: uppercase;
+  margin-bottom: 5px;
+}
+
+.column ul {
+  padding: 5px;
+}
+
+.column ul li {
+  color: gray;
+  padding: 1px;
+}
+
+a {
+  color: inherit;
+}
+
+.title {
+  font-size: x-large;
+}
