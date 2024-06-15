@@ -1,7 +1,7 @@
 # Yall Rosher
 
 Yall Rosher is a full-stack web application written in React and Django. It is a clothing branding website.
-<div style="color: red">Unfortunately, the frontend had some issues and was unable to complete this project properly</div>
+<div style="color: red">UNFORTUNATELY, the frontend had some issues and was unable to complete this project properly</div>
 
 But the backend has much more functionality than the frontend gives us.
 
