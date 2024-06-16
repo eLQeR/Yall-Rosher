@@ -18,6 +18,10 @@ But the backend has much more functionality than the frontend gives us.
 
 Yall Rosher is hosted on EC2 AWS instance  [web-site](https://yall-rosher.pp.ua/) on "https"
 
+Test admin user:
+username: `yaros`
+password: `111`
+
 ## Installation
 
 To run this application, install [docker](https://www.docker.com/products/docker-desktop/) locally.
@@ -29,9 +33,6 @@ Use the docker-compose.yml file to start up an application.
 - Create admin user (Optional)
 - `docker-compose exec -ti backend python manage.py createsuperuser`
 
-Test admin user:
-username: `yaros`
-password: `111`
 
 ## Demo of site
 
