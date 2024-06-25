@@ -17,6 +17,7 @@ But the backend has much more functionality than the frontend gives us.
 ## Deploy
 
 Yall Rosher is hosted on EC2 AWS instance  [web-site](https://yall-rosher.pp.ua/) on "https"
+and on 'http' [web-site](http://13.48.164.60/)
 
 Test admin user:
 username: `yaros`
